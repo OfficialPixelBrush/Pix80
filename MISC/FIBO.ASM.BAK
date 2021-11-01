@@ -1,0 +1,22 @@
+; B = x
+; D = y
+; E = z
+; C = Output
+
+LD   B , 0x0 ; x = 0
+LD   D , 0x1 ; y = 1
+
+loop:
+; print x goes here
+LD   C , B
+OUT (C), A
+; print end
+LD   A , B
+ADD  A , D
+LD   E , A ; z = x + y
+LD   B , D ; x = y
+LD   D , E ; y = z
+; check if x is 255
+LD A, 0xFF
+SUB A, B 
+JP NZ, loop
