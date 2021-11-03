@@ -15,7 +15,8 @@ divide:
     SUB E
     JP NZ,divloop
   divexit:
-    ld D,C
+  LD D,C
+  LD E,A
 
 ; output result on Port C
 LD C,D

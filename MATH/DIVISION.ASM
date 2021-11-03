@@ -1,5 +1,5 @@
-LD D, 42
-LD E, 7
+LD D, 184
+LD E, 15
 
 
 ; Multiply D with E
@@ -18,8 +18,6 @@ divide:
   LD D,C
   LD E,A
 
-; output result on Port C
-LD C,D
-OUT (C),A
-LD C,E
-OUT (C),A
+; output result on Databus
+OUT (C),D
+OUT (C),E
