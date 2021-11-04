@@ -10,10 +10,10 @@ divide:
   LD A,D
   divloop:
     CP E
-    JP C,divexit
+    JP C,divexit  ; could be JR
     INC C
     SUB E
-    JP NZ,divloop
+    JP NZ,divloop ; same with this one
   divexit:
   LD D,C
   LD E,A
