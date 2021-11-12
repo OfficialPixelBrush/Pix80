@@ -1,7 +1,6 @@
 LD D, 184
 LD E, 15
 
-
 ; Multiply D with E
 ; Result goes in D
 ; Rest in E
