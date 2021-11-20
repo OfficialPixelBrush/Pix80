@@ -1,7 +1,5 @@
 LD D, 184
 LD E, 15
-NOP
-
 
 ; Multiply D with E
 ; Result goes in D

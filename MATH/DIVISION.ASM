@@ -20,3 +20,4 @@ divide:
 ; output result on Databus
 OUT (C),D
 OUT (C),E
+HALT

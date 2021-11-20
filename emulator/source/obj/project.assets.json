@@ -1,0 +1,113 @@
+{
+  "version": 3,
+  "targets": {
+    "net5.0-windows7.0": {
+      "Z80dotNet/1.0.6": {
+        "type": "package",
+        "compile": {
+          "lib/net40-Client/Z80dotNet.dll": {}
+        },
+        "runtime": {
+          "lib/net40-Client/Z80dotNet.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Z80dotNet/1.0.6": {
+      "sha512": "AoqAdidHvxjt4ofVPbyyQvepd3rVRT8hCXxkmqinv9ujlG0E/CCDk8kvJbFckfjYhS0TngSeou2YVJ2uksvmFw==",
+      "type": "package",
+      "path": "z80dotnet/1.0.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40-Client/Z80dotNet.dll",
+        "z80dotnet.1.0.6.nupkg.sha512",
+        "z80dotnet.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net5.0-windows7.0": [
+      "Z80dotNet >= 1.0.6"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\letsp\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "F:\\Pix80\\emulator\\source\\PBPemU.csproj",
+      "projectName": "PBPemU",
+      "projectPath": "F:\\Pix80\\emulator\\source\\PBPemU.csproj",
+      "packagesPath": "C:\\Users\\letsp\\.nuget\\packages\\",
+      "outputPath": "F:\\Pix80\\emulator\\source\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\letsp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net5.0-windows7.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net5.0-windows7.0": {
+          "targetAlias": "net5.0-windows",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net5.0-windows7.0": {
+        "targetAlias": "net5.0-windows",
+        "dependencies": {
+          "Z80dotNet": {
+            "target": "Package",
+            "version": "[1.0.6, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WPF": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Z80dotNet 1.0.6' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Z80dotNet",
+      "targetGraphs": [
+        "net5.0-windows7.0"
+      ]
+    }
+  ]
+}
