@@ -2,7 +2,7 @@
 LD IX,0
 loop:
 ; hello offset + pointer
-LD A,(IX+hello)
+LD A,(IX+audio)
 ; output on data bus to LCD
 OUT (1),A
 ; increment IX
@@ -10,5 +10,5 @@ INC IX
 JP NZ,loop 
 HALT
 
-hello:
-    DEFM  "Hello, world!",0
+audio:
+    INCLUDE audio.bin
