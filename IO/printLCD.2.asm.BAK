@@ -11,5 +11,4 @@ JP NZ,loop
 HALT
 
 hello:
-    DEFM  "Hello, world!"
-    DEFB 0
+    DEFM  "Hello, world!",0
