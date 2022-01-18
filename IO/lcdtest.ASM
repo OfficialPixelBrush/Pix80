@@ -1,0 +1,26 @@
+; Device 4 = LCD Instructions
+; Device 0 = LCD Data
+; Clear Display
+LD A,0b00000001
+OUT (4),A
+; Start Display
+LD A,0b00001111
+OUT (4),A
+; Set Mode
+LD A,0b00111000
+OUT (4),A
+
+writeHelloWorld:
+; IX used as pointer
+LD IX,0
+; hello offset + pointer
+LD A,(IX+hello)
+; output on data bus to LCD
+OUT (0),A
+; increment IX
+INC IX
+JP NZ,writeHelloWorld 
+HALT
+
+hello:
+    DEFM  "Hello, world!",0
