@@ -11,6 +11,5 @@ multiply:
   JP NZ, muliloop
   LD D,A
 
-; output result on Port C
-LD C,D
-OUT (C),A
+; output result on Port 0
+OUT (0),D

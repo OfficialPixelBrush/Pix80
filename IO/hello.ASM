@@ -1,15 +1,14 @@
+    ; IX used as pointer
+    LD IX,0
 writeHelloWorld:
-; IX used as pointer
-LD IX,0
-; hello offset + pointer
-LD A,(IX+hello)
-; output on data bus to LCD
-OUT (1),A
-; increment IX
-INC IX
-JP NZ,writeHelloWorld 
-HALT
-
+    ; hello offset + pointer
+    LD A,(IX+hello)
+    ; output on data bus to LCD
+    OUT (1),A
+    ; increment IX
+    INC IX
+    CP 0
+    JP NZ,writeHelloWorld 
+    HALT
 hello:
-    DEFM  "Hello, world!",0
-
+    DEFM "Hello, world!",0

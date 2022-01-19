@@ -35,17 +35,18 @@ OUT (1),A
 
 ; Print Character
 LD A,1
-OUT (0),A    
-
-writeHelloWorld:
+OUT (0),A 
+   
 ; IX used as pointer
 LD IX,0
+writeHelloWorld:
 ; hello offset + pointer
 LD A,(IX+hello)
 ; output on data bus to LCD
 OUT (0),A
 ; increment IX
 INC IX
+CP 0
 JP NZ,writeHelloWorld 
 HALT
 
