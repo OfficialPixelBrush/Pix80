@@ -12,4 +12,6 @@ multiply:
   LD D,A
 
 ; output result on Port 0
-OUT (0),D
+LD A,D
+OUT (1),A
+HALT
