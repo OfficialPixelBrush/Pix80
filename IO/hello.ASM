@@ -4,7 +4,7 @@ writeHelloWorld:
     ; hello offset + pointer
     LD A,(IX+hello)
     ; output on data bus to LCD
-    OUT (1),A
+    OUT (0),A
     ; increment IX
     INC IX
     CP 0
