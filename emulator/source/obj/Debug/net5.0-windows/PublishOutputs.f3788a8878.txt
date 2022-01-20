@@ -1,5 +1,0 @@
-C:\Users\tvirtman.SVA\Downloads\PBPU\emulator\source\PBPemU\bin\Debug\net5.0-windows\publish\PBPemU.exe
-C:\Users\tvirtman.SVA\Downloads\PBPU\emulator\source\PBPemU\bin\Debug\net5.0-windows\publish\PBPemU.dll
-C:\Users\tvirtman.SVA\Downloads\PBPU\emulator\source\PBPemU\bin\Debug\net5.0-windows\publish\PBPemU.deps.json
-C:\Users\tvirtman.SVA\Downloads\PBPU\emulator\source\PBPemU\bin\Debug\net5.0-windows\publish\PBPemU.runtimeconfig.json
-C:\Users\tvirtman.SVA\Downloads\PBPU\emulator\source\PBPemU\bin\Debug\net5.0-windows\publish\PBPemU.pdb
