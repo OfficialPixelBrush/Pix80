@@ -1,3 +1,5 @@
+// Code made to compile with TCC (Tiny C Compiler)
+
 #include <stdio.h>
 #include <windows.h>
 #include "z80.h"
@@ -6,8 +8,6 @@
 
 #define LCD_WIDTH 20
 #define LCD_HEIGHT 4
-
-VrEmuLcd *lcd;// = 
 
 int clock      = 1000; // Clockspeed in Hz 
 
