@@ -1,12 +1,24 @@
 #include <stdio.h>
 #define CHIPS_IMPL
+// Simply placed into /include/ folder that comes with TCC
 #include "z80.h"
 #include "vrEmuLcd.h"
 
+// Define LCD Screen-size
 #define LCD_WIDTH 20
 #define LCD_HEIGHT 4
+
+// Create LCD
 VrEmuLcd *lcd;
 
+/* 
+ * This program is made to compile with TCC, no paramteres other than the
+ * C-file "pix80.c" are given. (e.g. "\.tcc pix80.c")
+ * The below example is a simple example program that is mostly irrelevant
+ * for this discussion. It uses the basic Setup from this blog post.
+ * https://floooh.github.io/2021/12/17/cycle-stepped-z80.html#a-code-sample
+ *
+ */
 int main() {
     // 64 KB memory with test program at address 0x0000
     uint8_t mem[(1<<16)] = {
@@ -17,6 +29,8 @@ int main() {
     };
 	
 	// LCD init
+	// This results in "pix80.c:21: error: 'vrEmuLcd' undeclared"
+	// All that is given is the "vrEmuLcd.h" file, not the C-file
 	VrEmuLcd *lcd = vrEmuLcd.vrEmuLcdNew(LCD_WIDTH, LCD_HEIGHT, EmuLcdRomA00);
 
     // initialize Z80 emu and execute some clock cycles 
