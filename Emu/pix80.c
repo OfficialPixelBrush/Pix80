@@ -1,6 +1,7 @@
 #include <stdio.h>
 #define CHIPS_IMPL
 // Simply placed into /include/ folder that comes with TCC
+// These files are found too, as far as I can see anyways
 #include "z80.h"
 #include "vrEmuLcd.h"
 
@@ -12,8 +13,9 @@
 VrEmuLcd *lcd;
 
 /* 
- * This program is made to compile with TCC, no paramteres other than the
- * C-file "pix80.c" are given. (e.g. "\.tcc pix80.c")
+ * This program is made to compile with TCC (Tiny C Compiler),
+ * no paramteres other than the C-file "pix80.c" are given ("\.tcc pix80.c")
+ *
  * The below example is a simple example program that is mostly irrelevant
  * for this discussion. It uses the basic Setup from this blog post.
  * https://floooh.github.io/2021/12/17/cycle-stepped-z80.html#a-code-sample
