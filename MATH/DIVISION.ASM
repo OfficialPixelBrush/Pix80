@@ -1,3 +1,19 @@
+; I/O Device 0 is LCD Instructions (RS = 0)
+; I/O Device 1 is LCD Data         (RS = 1)
+; Startup setup
+; Display ON
+LD A,0b00000001
+OUT (0),A
+; Clear Display
+LD A,0b00000001
+OUT (0),A
+; Function Set
+LD A,0b00101000
+OUT (0),A
+; Set DDRAM Address
+LD A,0b10000000
+OUT (0),A
+
 LD D, 184
 LD E, 15
 
@@ -18,6 +34,11 @@ divide:
   LD E,A
 
 ; output result on Databus
-OUT (C),D
-OUT (C),E
+LD C, 1
+LD A, 48
+ADD A, D
+OUT (1),A
+LD A, 48
+ADD A, E
+OUT (1),A
 HALT
