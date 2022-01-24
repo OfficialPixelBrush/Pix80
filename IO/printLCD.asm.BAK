@@ -1,5 +1,6 @@
 ; I/O Device 0 is LCD Instructions (RS = 0)
 ; I/O Device 1 is LCD Data         (RS = 1)
+; I/O Device 2 is Keyboard
 ; Startup setup
 ; Display ON
 LD A,0b00000001
@@ -48,7 +49,14 @@ OUT (1),A
 INC IX
 CP 0
 JP NZ,writeHelloWorld 
+
+keyboard:
 HALT
+IN A,(2)
+; put PS/2 to ASCII Processing here
+OUT (1),A
+JP keyboard
+
 
 hello:
     DEFM  "Hello, world!",0
