@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 	vrEmuLcdSendCommand(lcd, LCD_CMD_DISPLAY | LCD_CMD_DISPLAY_ON);
 	
 	// Clockspeed = 1000/Frequenzy in Hertz
-	int clockspeed = (1000/1000); 
+	//int clockspeed = (1000/1000); 
 	
     // 32 KB of ROM memory (0x0000 - 0x7FFF)
 	// 32 KB of RAM memory (0x8000 - 0xFFFF)

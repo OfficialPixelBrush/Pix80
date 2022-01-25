@@ -1,4 +1,4 @@
-WRITEHELLOWORLD=46:43:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-KEYBOARD=58:53:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-HELLO=70:68:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-PANDA=84:71:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
+WRITEHELLOWORLD=46:49:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
+KEYBOARD=58:59:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
+HELLO=70:74:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
+PANDA=86:77:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm

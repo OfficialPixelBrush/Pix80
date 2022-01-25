@@ -3,14 +3,14 @@
 ; I/O Device 2 is Keyboard
 ; Startup setup
 ; Display ON
-LD A,0b00000001
-OUT (0),A
+;LD A,0b00000001
+;OUT (0),A
 ; Clear Display
-LD A,0b00000001
-OUT (0),A
+;LD A,0b00000001
+;OUT (0),A
 ; Function Set
-LD A,0b00101000
-OUT (0),A
+;LD A,0b00101000
+;OUT (0),A
 
 
 ; Set CGRAM address
@@ -19,23 +19,29 @@ OUT (0),A
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
-LD A,0b00010001
+LD A,0b00000
+OUT (1),A
+LD A,0b01010
+OUT (1),A
+LD A,0b01010
+OUT (1),A
+LD A,0b00000
+OUT (1),A
+LD A,0b11111
+OUT (1),A
+LD A,0b01110
+OUT (1),A
+LD A,0b00000
 OUT (1),A
 OUT (1),A
-OUT (1),A
-OUT (1),A
-OUT (1),A
-OUT (1),A
-OUT (1),A
-OUT (1),A
-; Should be alternating lines
+; Should be smileyq
 
 ; Set DDRAM Address
 LD A,0b10000000
 OUT (0),A
 
 ; Print Character
-LD A,1
+LD A,0
 OUT (1),A 
    
 ; IX used as pointer
@@ -66,7 +72,7 @@ OUT (1),A ; then print the character
 JP keyboard  ; return to keyboard loop
 
 hello:
-    DEFM  "Hello, world!",0
+    DEFM  " Hello, world! ",0
 
 panda:
     ;INCLUDE "redPanda.bin"
