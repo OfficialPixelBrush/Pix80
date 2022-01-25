@@ -51,16 +51,12 @@ CP 0
 JP NZ,writeHelloWorld 
 
 keyboard:
-HALT
-; Set DDRAM Address
-LD A,0b10000000
-OUT (0),A
-;
 IN A,(2)
 ; put PS/2 to ASCII Processing here
+CP 64
+JP NC, keyboard
 OUT (1),A
 JP keyboard
-
 
 hello:
     DEFM  "Hello, world!",0

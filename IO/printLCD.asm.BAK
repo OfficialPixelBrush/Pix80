@@ -52,6 +52,10 @@ JP NZ,writeHelloWorld
 
 keyboard:
 HALT
+; Set DDRAM Address
+LD A,0b10000000
+OUT (0),A
+;
 IN A,(2)
 ; put PS/2 to ASCII Processing here
 OUT (1),A

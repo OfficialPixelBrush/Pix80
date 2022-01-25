@@ -1,0 +1,7 @@
+; Interrupt test
+LD A,'0'
+loop:
+HALT
+OUT (1),A
+INC A
+JP loop
