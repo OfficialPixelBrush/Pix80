@@ -1,47 +1,173 @@
-#include <stdio.h>
+#include <vrEmuLcd.h>
 #define CHIPS_IMPL
-// Simply placed into /include/ folder that comes with TCC
-// These files are found too, as far as I can see anyways
-#include "z80.h"
-#include "vrEmuLcd.h"
+#include <z80.h>
 
-// Define LCD Screen-size
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+#include <string.h>
+
+#include <SDL2/SDL.h>
+// Normally SDL2 will redefine the main entry point of the program for Windows applications
+// this doesn't seem to play nice with TCC, so we just undefine the redefinition
+#ifdef __TINYC__
+    #undef main
+#endif
+
+// Utility macros
+#define CHECK_ERROR(test, message) \
+    do { \
+        if((test)) { \
+            fprintf(stderr, "%s\n", (message)); \
+            exit(1); \
+        } \
+    } while(0)
+
 #define LCD_WIDTH 20
 #define LCD_HEIGHT 4
 
-// Create LCD
 VrEmuLcd *lcd;
+SDL_Renderer *renderer;
+bool running = true;
+SDL_Event event;
+static const int scale = 7;
 
-/* 
- * This program is made to compile with TCC (Tiny C Compiler),
- * no paramteres other than the C-file "pix80.c" are given ("\.tcc pix80.c")
- *
- * The below example is a simple example program that is mostly irrelevant
- * for this discussion. It uses the basic Setup from this blog post.
- * https://floooh.github.io/2021/12/17/cycle-stepped-z80.html#a-code-sample
- *
- */
-int main() {
-    // 64 KB memory with test program at address 0x0000
-    uint8_t mem[(1<<16)] = {
-        0x3E, 0x02,     // LD A,2
-        0x06, 0x03,     // LD B,3
-        0x80,           // ADD A,B
-        0x00,           // NOP...
-    };
+// Window dimensions
+static const int width = 119*7;
+static const int height = 35*7;
+
+// Get the current I/O Device number
+uint16_t getDevice(uint64_t pins) {
+    const uint16_t addr = Z80_GET_ADDR(pins) & 0b111;
+	return addr;
+}
+
+// Update and Redraw LCD
+int refreshLCD() {
+	// Clear screen
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	// then periodically, render it. 
+	vrEmuLcdUpdatePixels(lcd);   // generates a snapshot of the pixels state
 	
-	// LCD init
-	// This results in "pix80.c:21: error: 'vrEmuLcd' undeclared"
-	// All that is given is the "vrEmuLcd.h" file, not the C-file
-	VrEmuLcd *lcd = vrEmuLcd.vrEmuLcdNew(LCD_WIDTH, LCD_HEIGHT, EmuLcdRomA00);
+	for (int y = 0; y < vrEmuLcdNumPixelsY(lcd); ++y) {
+	  for (int x = 0; x < vrEmuLcdNumPixelsX(lcd); ++x) {
+		// do whatever you like with the pixel information. render it to a texture, output it to  a console, whatever
+	   // values returned are:  -1 = no pixel (character borders), 0 = pixel off, 1 = pixel on
+		char pixel = vrEmuLcdPixelState(lcd, x, y);
+		SDL_Rect pixDraw[] = {
+			{ x*scale, y*scale, x*scale+scale, y*scale+scale }
+		};
+		switch (pixel) {
+			case -1:
+				SDL_SetRenderDrawColor(renderer, 31, 139, 255, 255);
+				SDL_RenderFillRect(renderer,pixDraw);
+				break;
+			case 0:
+				SDL_SetRenderDrawColor(renderer, 61, 171, 255, 255);
+				SDL_RenderFillRect(renderer,pixDraw);
+				break;
+			case 1:
+				SDL_SetRenderDrawColor(renderer, 245, 253, 255, 255);
+				SDL_RenderFillRect(renderer,pixDraw);
+				break;
+		}
+	  }
+	}
+	
+	// Show what was drawn
+	SDL_RenderPresent(renderer);
+	return 0;
+}
 
-    // initialize Z80 emu and execute some clock cycles 
+int main(int argc, char **argv) {
+	// ---------------------- Rendering ----------------------
+    
+    // Initialize SDL
+    CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
+
+    // Create an SDL window
+    SDL_Window *window = SDL_CreateWindow("Pix80Emu", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
+    CHECK_ERROR(window == NULL, SDL_GetError());
+
+    // Create a renderer (accelerated and in sync with the display refresh rate)
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);    
+    CHECK_ERROR(renderer == NULL, SDL_GetError());
+
+    // Initial renderer color
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+	
+	// ---------------------- Hardware ----------------------
+	// LCD init
+	lcd = vrEmuLcdNew(LCD_WIDTH, LCD_HEIGHT, EmuLcdRomA00);
+	vrEmuLcdSendCommand(lcd, LCD_CMD_DISPLAY | LCD_CMD_DISPLAY_ON);
+	
+	// Clockspeed = 1000/Frequenzy in Hertz
+	int clockspeed = (1000/1000); 
+	
+    // 32 KB of ROM memory (0x0000 - 0x7FFF)
+	// 32 KB of RAM memory (0x8000 - 0xFFFF)
+	FILE *in_file;
+	if (in_file = fopen(argv[1], "rb")) { // read only
+		// file exists
+	} else {
+		// If no file is found, print it on the LCD
+		vrEmuLcdSendCommand(lcd, LCD_CMD_FUNCTION | LCD_CMD_FUNCTION_LCD_2LINE | 0x10);
+		vrEmuLcdSendCommand(lcd, LCD_CMD_CLEAR);
+		vrEmuLcdSendCommand(lcd, LCD_CMD_HOME);
+		vrEmuLcdWriteString(lcd, "No file found!");
+		refreshLCD();
+		goto stop;
+	}
+	uint8_t mem[(1<<16)];
+	
+	// Load ROM file into Memory
+	int loadROM;
+	char c;
+	while ((c = fgetc(in_file)) != EOF)
+	{
+		mem[loadROM] = c;
+		loadROM++;
+	
+		// end-of-file related
+		if (feof(in_file)) {
+		  // hit end of file
+		} else {
+		  // some other error interrupted the read
+		}
+	}
+
+    // initialize Z80 CPU
     z80_t cpu;
     uint64_t pins = z80_init(&cpu);
-    for (int i = 0; i < 20; i++) {
-        
+	
+	// reset Z80 CPU for it to be in a known state
+	z80_reset(&cpu);
+	
+	// ---------------------- Actual Emulation ----------------------
+	// run code until HALT pin (active low) goes low
+	char keyboard;
+	while(running) {  
+		// Process Keyboard Inputs
+		while(SDL_PollEvent(&event)) {
+			if(event.type == SDL_QUIT) {
+				running = false;
+			} else if(event.type == SDL_KEYDOWN) {
+				const char *key = SDL_GetKeyName(event.key.keysym.sym);
+				//printf( "Scancode: 0x%02X", key->keysym.scancode );
+				if(strcmp(key, "Q") == 0) {
+					running = false;
+				} else {
+					keyboard = key[0];
+				}
+			}
+		}
+		
         // tick the CPU
-        pins = z80_tick(&cpu, pins);
+        pins = z80_tick(&cpu, pins);  
 
         // handle memory read or write access
         if (pins & Z80_MREQ) {
@@ -51,10 +177,50 @@ int main() {
             else if (pins & Z80_WR) {
                 mem[Z80_GET_ADDR(pins)] = Z80_GET_DATA(pins);
             }
-        }
+        } else if (pins & Z80_IORQ) { // Handle I/O Devices (Read)
+			if (pins & Z80_WR) {
+				switch (getDevice(pins)) {
+					case 0: // LCD Instruction
+						vrEmuLcdSendCommand(lcd, Z80_GET_DATA(pins));
+						refreshLCD();
+						break;
+					case 1: // LCD Data
+						vrEmuLcdWriteByte(lcd, Z80_GET_DATA(pins));
+						refreshLCD();
+						break;
+				}
+			} else if (pins & Z80_RD) {
+				switch (getDevice(pins)) {
+					case 2: // Keyboard Input
+						Z80_SET_DATA(pins, keyboard);
+						keyboard = 0;
+						refreshLCD();
+						break;
+				}
+			}
+		}
+		// Wait to simulate CPU Clock
+		//Sleep(clockspeed);
     }
+	
+	stop:
+    while(running) {
+		// Process events
+		while(SDL_PollEvent(&event)) {
+			if(event.type == SDL_QUIT) {
+				running = false;
+			} else if(event.type == SDL_KEYDOWN) {
+				const char *key = SDL_GetKeyName(event.key.keysym.sym);
+				if(strcmp(key, "Q") == 0) {
+					running = false;
+				}                 
+			}
+		}
+	}
 
-    // register A should now be 5
-    printf("\nRegister A: %d\n", cpu.a);
+    // Release resources
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
     return 0;
 }
