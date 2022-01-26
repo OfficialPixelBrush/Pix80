@@ -1,0 +1,4 @@
+KEYBOARD=0:9:0:F:\Pix80\IO\typer.asm
+BACKSPACE=18:20:0:F:\Pix80\IO\typer.asm
+MOVELCDTOD=31:31:0:F:\Pix80\IO\typer.asm
+MOVELCDEND=39:41:0:F:\Pix80\IO\typer.asm
