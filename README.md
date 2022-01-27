@@ -1,2 +1,2 @@
 # Pix80
- Operating System for the Z80-based Computer, the Pix80
+Repo containing the Pix80 OS and Emulator
