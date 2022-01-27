@@ -20,7 +20,7 @@ Extended Memory can be accessed through Device (tba), allowing all the available
 Device (tba) is an 8-Bit Register, essentially extending the 16-Bit Address range of the Z80 (64 kilobytes) to 24-Bits (16 megabytes).
 
 ```text
-One dash represent 64 kilobytes,
+One dash represents 64 kilobytes,
 the brackets are simply delimiters
 
 Regular amount of Memory:
