@@ -58,24 +58,29 @@ JP NZ,writeHelloWorld
 
 keyboard:
 IN A,(2)
-; put PS/2 to ASCII Processing here
+; put PS/2 to ASCII Processing here v
+CP 8
+CALL Z,backspace
 CP 32 ; if the Character is within printable ASCII
 JP C, keyboard
-; backspace
-CP 8
-JP C,backspace
 OUT (1),A ; then print the character
+JP keyboard
 
 backspace:
-PUSH A
-LD A, 0b00010100
+PUSH AF
+; clear char
+LD A, 0b00010000
 OUT (0),A ; reverse printing direction to r-l
+
 LD A, 32
 OUT (1),A ; print space
-OUT (1),A ; print space
+
+; clear char
 LD A, 0b00010000
-OUT (0),A ; return printing direction to l-r
-POP A
+OUT (0),A ; reverse printing direction to r-l
+
+POP AF
+RET
 
 
 ; LCD Printing handling

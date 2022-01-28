@@ -42,8 +42,13 @@ OUT (0),A
 
 ; Print Character
 LD A,0
-OUT (1),A 
-   
+OUT (1),A
+
+; test
+IN A,(3)
+LD HL, 0x8000 
+LD (HL),A  
+ 
 ; IX used as pointer
 LD IX,0
 writeHelloWorld:

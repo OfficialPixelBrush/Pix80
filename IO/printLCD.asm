@@ -69,6 +69,7 @@ CALL Z,backspace
 CP 32 ; if the Character is within printable ASCII
 JP C, keyboard
 OUT (1),A ; then print the character
+OUT (3),A
 JP keyboard
 
 backspace:

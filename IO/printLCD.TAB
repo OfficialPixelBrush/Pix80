@@ -1,5 +1,5 @@
 WRITEHELLOWORLD=52:54:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
 KEYBOARD=64:64:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
-BACKSPACE=81:74:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
-HELLO=99:99:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
-PANDA=115:102:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
+BACKSPACE=83:75:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
+HELLO=101:100:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm
+PANDA=117:103:0:C:\Users\letsp\Desktop\Pix80-Code\IO\printLCD.asm

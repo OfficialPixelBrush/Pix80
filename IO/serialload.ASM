@@ -6,25 +6,27 @@
 ; load Program via Serial Port
 ; set starting address to
 ; start of RAM
-LD HL,0x8000
+LD HL,exit;0x8000 
 load: 
 ; load and write byte
 IN A,(3)
 LD (HL),A
 ; check if HL is at 0xFFFF
-LD A, 0xFF
+;LD A, 0x1E
 ;CP H
 ; if H isn't 0xFF, don't
 ; bother checking lower bits
 ;JR NZ, notfull
 ; if it is equal to 0xFF,
 ; check the lower bits
+LD A,0xFE
 CP L
 ; if they are 0xFF, exit
-JP NZ, 0x8000
-notfull:
+JP Z, exit ;exit;0x7FFF
+;notfull:
 ; if not, increment HL
 INC HL
 ; loop for next byte
 JR load
 HALT
+exit:
