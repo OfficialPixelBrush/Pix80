@@ -1,0 +1,17 @@
+; set A at start
+LD A,55
+
+loop:
+LD B,A        ; load contents of A into B
+SRL A         ; shift contents of A to the right, 0 the 7th bit
+XOR B         ; XOR A with B, result is put in A
+BIT 0,A       ; Check Bit 0, Zero Flag is set
+; this can be improved
+LD A,B        ; load contents of B into A
+SRL A         ; shift contents of A to the right, 0 the 7th bit
+JP Z, skipSet ; if Zero flag is set, putting it to 7th bit is unnecessary, so skip
+SET 7,A       ; set 7th bit
+
+skipset:
+; print Char according to Zero Flag
+JP loop       ; unconditional jump
