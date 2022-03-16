@@ -1,17 +1,87 @@
-; set A at start
-LD A,55
+; Set CGRAM address
+LD A,0b01000000
+OUT (0),A
+
+; Write Data to Screen
+; Last 3 bits shouldn't matter
+LD A,0b10000
+OUT (1),A
+LD A,0b10000
+OUT (1),A
+LD A,0b01000
+OUT (1),A
+LD A,0b00100
+OUT (1),A
+LD A,0b00010
+OUT (1),A
+LD A,0b00001
+OUT (1),A
+LD A,0b00001
+OUT (1),A
+LD A,0b00000
+OUT (1),A
+; Should be backslash
+
+; Write Data to Screen
+; Last 3 bits shouldn't matter
+LD A,0b00001
+OUT (1),A
+LD A,0b00001
+OUT (1),A
+LD A,0b00010
+OUT (1),A
+LD A,0b00100
+OUT (1),A
+LD A,0b01000
+OUT (1),A
+LD A,0b10000
+OUT (1),A
+LD A,0b10000
+OUT (1),A
+LD A,0b00000
+OUT (1),A
+; Should be slash
+
+; Set DDRAM Address
+LD A,0b10000000
+OUT (0),A
 
 loop:
-LD B,A        ; load contents of A into B
-SRL A         ; shift contents of A to the right, 0 the 7th bit
-XOR B         ; XOR A with B, result is put in A
-BIT 0,A       ; Check Bit 0, Zero Flag is set
-; this can be improved
-LD A,B        ; load contents of B into A
-SRL A         ; shift contents of A to the right, 0 the 7th bit
-JP Z, skipSet ; if Zero flag is set, putting it to 7th bit is unnecessary, so skip
-SET 7,A       ; set 7th bit
+call rnd
+ld   c,a
+ld   b,0
 
-skipset:
-; print Char according to Zero Flag
+PUSH AF
+JP P, printBackslash
+LD A,1
+OUT (1),A
+JP exit
+printBackslash:
+LD A,0
+OUT (1),A
+
+exit:
+POP AF
 JP loop       ; unconditional jump
+
+rnd:
+        ld  hl,0xA280   ; yw -> zt
+        ld  de,0xC0DE   ; xz -> yw
+        ld  (rnd+4),hl  ; x = y, z = w
+        ld  a,l         ; w = w ^ ( w << 3 )
+        add a,a
+        add a,a
+        add a,a
+        xor l
+        ld  l,a
+        ld  a,d         ; t = x ^ (x << 1)
+        add a,a
+        xor d
+        ld  h,a
+        rra             ; t = t ^ (t >> 1) ^ w
+        xor h
+        xor l
+        ld  h,e         ; y = z
+        ld  l,a         ; w = t
+        ld  (rnd+1),hl
+        ret 
