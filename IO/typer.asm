@@ -5,6 +5,9 @@
 ; Set DDRAM Address
 ;LD A,0b10000000
 ;:OUT (0),A
+; Enable Display
+LD A,0b00001100
+OUT (0),A
 
 keyboard:
 IN A,(2)         ; check keyboard buffer for new data

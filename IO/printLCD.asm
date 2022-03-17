@@ -1,16 +1,9 @@
 ; I/O Device 0 is LCD Instructions (RS = 0)
 ; I/O Device 1 is LCD Data         (RS = 1)
 ; I/O Device 2 is Keyboard
-; Startup setup
-; Display ON
-;LD A,0b00000001
-;OUT (0),A
-; Clear Display
-;LD A,0b00000001
-;OUT (0),A
-; Function Set
-;LD A,0b00101000
-;OUT (0),A
+; Enable Display
+LD A,0b00001100
+OUT (0),A
 
 ; Set CGRAM address
 LD A,0b01000000

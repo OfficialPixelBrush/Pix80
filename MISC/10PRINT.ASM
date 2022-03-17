@@ -1,3 +1,7 @@
+; Enable Display
+LD A,0b00001100
+OUT (0),A
+
 ; Set CGRAM address
 LD A,0b01000000
 OUT (0),A

@@ -10,7 +10,6 @@ OUT (4),A
 LD A,0b00111000
 OUT (4),A
 
-writeHelloWorld:
 ; IX used as pointer
 LD IX,0
 ; hello offset + pointer
