@@ -1,54 +1,54 @@
 ; Enable Display
 LD A,0b00001100
-OUT (0),A
+OUT (1),A
 
 ; Set CGRAM address
 LD A,0b01000000
-OUT (0),A
+OUT (1),A
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
 LD A,0b10000
-OUT (1),A
+OUT (0),A
 LD A,0b10000
-OUT (1),A
+OUT (0),A
 LD A,0b01000
-OUT (1),A
+OUT (0),A
 LD A,0b00100
-OUT (1),A
+OUT (0),A
 LD A,0b00010
-OUT (1),A
+OUT (0),A
 LD A,0b00001
-OUT (1),A
+OUT (0),A
 LD A,0b00001
-OUT (1),A
+OUT (0),A
 LD A,0b00001
-OUT (1),A
+OUT (0),A
 ; Should be backslash
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
 LD A,0b00001
-OUT (1),A
+OUT (0),A
 LD A,0b00001
-OUT (1),A
+OUT (0),A
 LD A,0b00010
-OUT (1),A
+OUT (0),A
 LD A,0b00100
-OUT (1),A
+OUT (0),A
 LD A,0b01000
-OUT (1),A
+OUT (0),A
 LD A,0b10000
-OUT (1),A
+OUT (0),A
 LD A,0b10000
-OUT (1),A
+OUT (0),A
 LD A,0b10000
-OUT (1),A
+OUT (0),A
 ; Should be slash
 
 ; Set DDRAM Address
 LD A,0b10000000
-OUT (0),A
+OUT (1),A
 
 loop:
 call rnd
@@ -58,11 +58,11 @@ ld   b,0
 PUSH AF
 JP P, printBackslash
 LD A,1
-OUT (1),A
+OUT (0),A
 JP exit
 printBackslash:
 LD A,0
-OUT (1),A
+OUT (0),A
 
 exit:
 POP AF

@@ -1,0 +1,8 @@
+; RAM TEST
+LD HL,0x8000
+loop:
+LD (HL),55
+LD A,(HL)
+OUT (0),A
+INC HL
+JP loop

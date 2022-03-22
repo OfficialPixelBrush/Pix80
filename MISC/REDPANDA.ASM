@@ -1,0 +1,20 @@
+; RED PANDA SPIN
+LD A,0b00001100     ; turn on display
+OUT (1),A
+LD A,0b10000000     ; set DRAM Address
+OUT (1),A
+; draw the 8 characters
+LD A,0
+OUT (0),A
+INC A
+OUT (0),A
+LD A,0b11000000     ; set DRAM Address to second row
+INC A
+OUT (0),A
+INC A
+OUT (0),A
+; very cheap, but functional
+
+
+panda0:
+    DEFM 0x0,0x0,0b00010,0b00101,0b00011,0b00101,0b00110,0b00011,0x0,0x0,0b01000,0b10100,0b11000,0b10100,0b11000,0b11000,0x0,0b00011,0b00010,0b00010,0b01010,0b01010,0x0,0x0,0x0,0b11000,0b11100,0b11110,0b11010,0b10110,0x0,0x0

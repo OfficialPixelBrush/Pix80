@@ -12,7 +12,6 @@
 ;LD A,0b00101000
 ;OUT (0),A
 
-
 ; Set CGRAM address
 LD A,0b01000000
 OUT (0),A
@@ -34,7 +33,7 @@ OUT (1),A
 LD A,0b00000
 OUT (1),A
 OUT (1),A
-; Should be smileyq
+; Should be smiley
 
 ; Set DDRAM Address
 LD A,0b10000000
@@ -54,12 +53,14 @@ LD IX,0
 writeHelloWorld:
 ; hello offset + pointer
 LD A,(IX+hello)
-; output on data bus to LCD
-OUT (1),A
 ; increment IX
 INC IX
 CP 0
-JP NZ,writeHelloWorld 
+JP Z,exitHello
+; output on data bus to LCD
+OUT (1),A
+JR writeHelloWorld 
+exitHello:
 
 keyboard:
 IN A,(2)

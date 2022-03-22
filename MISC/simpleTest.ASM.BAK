@@ -1,0 +1,4 @@
+LD A,0b01010101
+loop:
+OUT (0),A
+JP loop
