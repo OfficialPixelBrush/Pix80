@@ -1,3 +1,17 @@
+/*
+ *  ___        ___  __   ___
+ * | . \<>__  < . >|  | | __| _ _  _  _
+ * |  _/||\ \// . \| \| | _| / | \| || |
+ * |_|  ||/\_\\___/`__' |___|| | |\____|
+ *
+ * An Emulator written in C, made to emulate 
+ * the Z80-based Pix80 Computer.
+ * It should, best case, run all software
+ * flawlessly and with high accuracy.
+ *
+ */
+
+
 #include <vrEmuLcd.h>
 #define CHIPS_IMPL
 #include <z80.h>
@@ -7,7 +21,6 @@
 #include <stdbool.h>
 #include <time.h>
 #include <string.h>
-
 #include <SDL2/SDL.h>
 // Normally SDL2 will redefine the main entry point of the program for Windows applications
 // this doesn't seem to play nice with TCC, so we just undefine the redefinition
@@ -27,6 +40,7 @@
 #define LCD_WIDTH 20
 #define LCD_HEIGHT 4
 
+// Initialize a few things
 VrEmuLcd *lcd;
 SDL_Renderer *renderer;
 bool running = true;
@@ -61,15 +75,18 @@ int refreshLCD() {
 		};
 		switch (pixel) {
 			case -1:
-				SDL_SetRenderDrawColor(renderer, 31, 139, 255, 255);
+				SDL_SetRenderDrawColor(renderer, 50, 72, 253, 255);
+				// OLD SDL_SetRenderDrawColor(renderer, 31, 139, 255, 255);
 				SDL_RenderFillRect(renderer,pixDraw);
 				break;
 			case 0:
-				SDL_SetRenderDrawColor(renderer, 61, 171, 255, 255);
+				SDL_SetRenderDrawColor(renderer, 50, 60, 254, 255);
+				// OLD SDL_SetRenderDrawColor(renderer, 61, 171, 255, 255);
 				SDL_RenderFillRect(renderer,pixDraw);
 				break;
 			case 1:
-				SDL_SetRenderDrawColor(renderer, 245, 253, 255, 255);
+				SDL_SetRenderDrawColor(renderer, 240, 252, 253, 255);
+				// OLD SDL_SetRenderDrawColor(renderer, 245, 253, 255, 255);
 				SDL_RenderFillRect(renderer,pixDraw);
 				break;
 		}
@@ -103,10 +120,6 @@ int main(int argc, char **argv) {
 	// ---------------------- Hardware ----------------------
 	// LCD init
 	lcd = vrEmuLcdNew(LCD_WIDTH, LCD_HEIGHT, EmuLcdRomA00);
-	vrEmuLcdSendCommand(lcd, LCD_CMD_DISPLAY | LCD_CMD_DISPLAY_ON);
-	
-	// Clockspeed = 1000/Frequenzy in Hertz
-	//int clockspeed = (1000/1000); 
 	
     // 32 KB of ROM memory (0x0000 - 0x7FFF)
 	// 32 KB of RAM memory (0x8000 - 0xFFFF)
@@ -115,13 +128,15 @@ int main(int argc, char **argv) {
 		// file exists
 	} else {
 		// If no file is found, print it on the LCD
+		vrEmuLcdSendCommand(lcd, LCD_CMD_DISPLAY | LCD_CMD_DISPLAY_ON);
 		vrEmuLcdSendCommand(lcd, LCD_CMD_FUNCTION | LCD_CMD_FUNCTION_LCD_2LINE | 0x10);
 		vrEmuLcdSendCommand(lcd, LCD_CMD_CLEAR);
-		vrEmuLcdSendCommand(lcd, LCD_CMD_HOME);
+		vrEmuLcdSendCommand(lcd, LCD_CMD_SET_DRAM_ADDR | 0x43);
 		vrEmuLcdWriteString(lcd, "No file found!");
 		refreshLCD();
 		goto stop;
 	}
+	// Initalize all memory
 	uint8_t mem[(1<<16)];
 	
 	// Load ROM file into Memory
@@ -150,6 +165,7 @@ int main(int argc, char **argv) {
 	// ---------------------- Actual Emulation ----------------------
 	// run code until HALT pin (active low) goes low
 	char keyboard;
+	char capslock = 0;
 	while(running) {  
 		// Process Keyboard Inputs
 		while(SDL_PollEvent(&event)) {
@@ -157,11 +173,23 @@ int main(int argc, char **argv) {
 				running = false;
 			} else if(event.type == SDL_KEYDOWN) {
 				const char *key = SDL_GetKeyName(event.key.keysym.sym);
-				//printf( "Scancode: 0x%02X", key->keysym.scancode );
-				if(strcmp(key, "Q") == 0) {
+				//printf("%s\n",key);
+                if(strcmp(key, "Backspace") == 0) {
+					keyboard = 8;
+				} else if (strcmp(key, "Return") == 0) {
+					keyboard = 13;
+				} else if (strcmp(key, "Escape") == 0) {
+					keyboard = 27;
 					running = false;
-				} else {
-					keyboard = key[0];
+				} else if (strcmp(key, "Space") == 0) {
+					keyboard = ' ';
+				} else if (strcmp(key, "CapsLock") == 0) {
+					capslock = !capslock;
+				} else if (key[0] > ' ') {
+					if (capslock)
+						keyboard = key[0];
+					else
+						keyboard = key[0]+32;
 				}
 			}
 		}
@@ -172,35 +200,45 @@ int main(int argc, char **argv) {
         // handle memory read or write access
         if (pins & Z80_MREQ) {
             if (pins & Z80_RD) {
+				// Read Instructions
                 Z80_SET_DATA(pins, mem[Z80_GET_ADDR(pins)]);
+				//printf("%X - %X\n", Z80_GET_DATA(pins), Z80_GET_ADDR(pins));
             }
             else if (pins & Z80_WR) {
+				// Write to Memory 
                 mem[Z80_GET_ADDR(pins)] = Z80_GET_DATA(pins);
             }
         } else if (pins & Z80_IORQ) { // Handle I/O Devices (Read)
-			if (pins & Z80_WR) {
-				switch (getDevice(pins)) {
-					case 0: // LCD Instruction
+			switch (getDevice(pins)) {
+				case 0: // LCD Data
+					vrEmuLcdWriteByte(lcd, Z80_GET_DATA(pins));
+					refreshLCD();
+					break;
+				case 1: // LCD Instruction
+					if (pins & Z80_WR) {
 						vrEmuLcdSendCommand(lcd, Z80_GET_DATA(pins));
-						refreshLCD();
-						break;
-					case 1: // LCD Data
-						vrEmuLcdWriteByte(lcd, Z80_GET_DATA(pins));
-						refreshLCD();
-						break;
-				}
-			} else if (pins & Z80_RD) {
-				switch (getDevice(pins)) {
-					case 2: // Keyboard Input
-						Z80_SET_DATA(pins, keyboard);
-						keyboard = 0;
-						refreshLCD();
-						break;
-				}
+					} else if (pins & Z80_RD) {
+						Z80_SET_DATA(pins, vrEmuLcdReadAddress(lcd));
+					}
+					refreshLCD();
+					break;
+				case 2: // Keyboard Input
+					Z80_SET_DATA(pins, keyboard);
+					keyboard = 0;
+					refreshLCD();
+					break;
+				case 3: // Serial I/O
+					if (pins & Z80_WR) {
+						printf("%c",Z80_GET_DATA(pins));//vrEmuLcdSendCommand(lcd, Z80_GET_DATA(pins));
+					} else if (pins & Z80_RD) {
+						//Z80_SET_DATA(pins, serialIn[cpu.hl]);
+					}
+					refreshLCD();
+					break;
 			}
 		}
 		// Wait to simulate CPU Clock
-		//Sleep(clockspeed);
+		//SDL_Delay(100);
     }
 	
 	stop:
