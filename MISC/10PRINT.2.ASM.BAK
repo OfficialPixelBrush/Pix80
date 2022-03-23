@@ -1,3 +1,7 @@
+; Enable Display
+LD A,0b00001100
+OUT (0),A
+
 ; Set CGRAM address
 LD A,0b01000000
 OUT (0),A
@@ -18,7 +22,7 @@ LD A,0b00001
 OUT (1),A
 LD A,0b00001
 OUT (1),A
-LD A,0b00000
+LD A,0b00001
 OUT (1),A
 ; Should be backslash
 
@@ -38,7 +42,7 @@ LD A,0b10000
 OUT (1),A
 LD A,0b10000
 OUT (1),A
-LD A,0b00000
+LD A,0b10000
 OUT (1),A
 ; Should be slash
 
