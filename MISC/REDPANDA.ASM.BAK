@@ -27,20 +27,6 @@ LD A,3
 OUT (0),A
 ; very cheap, but functional
 
-LD A,0b01000000     ; set CGRAM Address
-OUT (1),A
-; load byte into Char
-LD B,0
-LD HL,panda0
-continueLoading:
-LD A,(HL) ; load contents of mem location HL
-OUT (0),A ; output pixel data
-INC HL    ; increase to next location
-LD A,64   ; load 32 into A
-INC B     ; count B up
-CP B      ; check if B is 32
-JP NZ,continueLoading
-
 LD A,0b11000010     ; set DRAM Address
 OUT (1),A
 LD A,'/'            ; print /
@@ -63,11 +49,75 @@ writeHelloWorld:
     JR writeHelloWorld
 
 exitHello:
-    HALT
+; Red Panda Speen
+pandaLoop:
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+; Panda 0
+LD B,0
+LD HL,panda0
+panda0loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda0loop
+; Panda 1
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda1
+panda1loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda1loop
+; Panda 2
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda2
+panda2loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda2loop
+; Panda 3
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda3
+panda3loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda3loop
+
+JP pandaLoop
+HALT
 
 hello:
     DEFM "Hello, world!",0
-
-
 panda0:
-    INCLUDEBINARY "image.bin"
+    INCLUDEBINARY "redPanda0.bin"
+panda1:
+    INCLUDEBINARY "redPanda1.bin"
+panda2:
+    INCLUDEBINARY "redPanda2.bin"
+panda3:
+    INCLUDEBINARY "redPanda3.bin"

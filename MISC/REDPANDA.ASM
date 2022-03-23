@@ -107,6 +107,62 @@ LD A,64   ; load 32 into A
 INC B     ; count B up
 CP B      ; check if B is 32
 JP NZ,panda3loop
+; Panda 4
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda4
+panda4loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda4loop
+; Panda 5
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda5
+panda5loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda5loop
+; Panda 6
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda6
+panda6loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda6loop
+; Panda 7
+LD A,0b01000000     ; set CGRAM Address
+OUT (1),A
+; load byte into Char
+LD B,0
+LD HL,panda7
+panda7loop:
+LD A,(HL) ; load contents of mem location HL
+OUT (0),A ; output pixel data
+INC HL    ; increase to next location
+LD A,64   ; load 32 into A
+INC B     ; count B up
+CP B      ; check if B is 32
+JP NZ,panda7loop
 
 JP pandaLoop
 HALT
@@ -121,3 +177,11 @@ panda2:
     INCLUDEBINARY "redPanda2.bin"
 panda3:
     INCLUDEBINARY "redPanda3.bin"
+panda4:
+    INCLUDEBINARY "redPanda4.bin"
+panda5:
+    INCLUDEBINARY "redPanda5.bin"
+panda6:
+    INCLUDEBINARY "redPanda6.bin"
+panda7:
+    INCLUDEBINARY "redPanda7.bin"
