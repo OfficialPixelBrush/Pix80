@@ -1,13 +1,20 @@
 ; I/O Device 0 is LCD Instructions (RS = 0)
 ; I/O Device 1 is LCD Data         (RS = 1)
-; I/O Device 2 is Keyboard
+; I/O Device 2 is Serial I/O
 
-; Set DDRAM Address
-;LD A,0b10000000
-;:OUT (0),A
-; Enable Display
-LD A,0b00001100
-OUT (0),A
+; LCD init
+LD A,0b00111000     ; set screen mode
+OUT (1),A
+LD A,0b00111000     ; set screen mode
+OUT (1),A
+LD A,0b00001100     ; turn on display
+OUT (1),A
+LD A,0b00000001     ; clear display
+OUT (1),A
+LD A,0b00000110     ; set entry mode
+OUT (1),A
+LD A,0b10000000     ; set DRAM Address
+OUT (1),A
 
 keyboard:
 IN A,(2)         ; check keyboard buffer for new data
@@ -17,7 +24,7 @@ CALL Z,backspace ; enter backspace subroutine
 CP 32            ; if the Character is not printable ASCII
 JP C, keyboard   ; loop back to check for a new character
 INC D
-OUT (1),A        ; otherwise print the character that was found
+OUT (0),A        ; otherwise print the character that was found
 JP keyboard      ; then loop back to check again
 
 backspace:
@@ -25,7 +32,7 @@ PUSH AF
 ;DEC D            ; Decrement D
 CALL moveLCDtoD  ; Move Cursor to previous character 
 LD A, 32         ; print space over last character
-OUT (1),A        ; print space
+OUT (0),A        ; print space
 CALL moveLCDtoD  ; Move Cursor to previous character 
 POP AF           
 RET              ; return to function that called
@@ -43,5 +50,5 @@ LD D,0
 moveLCDend:
 LD A,0b10000000
 ADD A,D
-OUT (0),A
+OUT (1),A
 RET
