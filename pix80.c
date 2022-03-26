@@ -224,6 +224,7 @@ int main(int argc, char **argv) {
 					break;
 				case 2: // Keyboard Input
 					Z80_SET_DATA(pins, keyboard);
+					pins = pins | Z80_INT
 					keyboard = 0;
 					refreshLCD();
 					break;
