@@ -32,8 +32,12 @@ JP C, keyboard   ; loop back to check for a new character
 PUSH AF
 INC D            ; if the character is printable, increment D
 LD A,D           ; load D into A
-CP 0x13          ; check if A is larger than 0x13
-CALL NC, SHIFTLEFT
+CP 0x14          ; check if A is larger than 0x13
+CALL Z, NEXTLINE2
+CP 0x28          ; check if A is larger than 0x13
+CALL Z, NEXTLINE3
+CP 0x3C          ; check if A is larger than 0x13
+CALL Z, NEXTLINE4
 POP AF
 OUT (0),A        ; otherwise print the character that was found
 keyboard:
@@ -41,9 +45,20 @@ keyboard:
 EI
 HALT
 
-SHIFTLEFT:
-PUSH AF
-LD A,0b00011000
+NEXTLINE2:
+LD A,0x40+0b10000000
 OUT (1),A
-POP AF
 RET 
+
+NEXTLINE3:
+LD A,0x14+0b10000000
+OUT (1),A
+RET 
+
+NEXTLINE4:
+LD A,0x54+0b10000000
+OUT (1),A
+RET 
+
+buildDate:
+DEFDATETIME
