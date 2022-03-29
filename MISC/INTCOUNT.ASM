@@ -1,0 +1,57 @@
+ORG 0x0
+IM 1
+EI
+
+LD A,0b00111000     ; set screen mode
+OUT (1),A
+LD A,0b00111000     ; set screen mode
+OUT (1),A
+LD A,0b00001100     ; turn on display
+OUT (1),A
+LD A,0b00000001     ; clear display
+OUT (1),A
+LD A,0b00000110     ; set entry mode
+OUT (1),A
+LD A,0b10000000     ; set DRAM Address
+OUT (1),A
+LD D,0
+
+ORG 0x38
+interrupt:
+DI
+LD A,0b10000000
+OUT (1),A 
+INC D
+LD A,D
+CALL printHex
+EI
+HALT
+
+printHex:
+RLCA
+RLCA
+RLCA
+RLCA
+CALL printHexFrom4Bits
+RLCA
+RLCA
+RLCA
+RLCA
+CALL printHexFrom4Bits   
+RET      
+
+printHexFrom4Bits:
+PUSH AF
+AND 0x0F            ; limit to 4 lowest bits
+CP 0xA              ; check if less than A
+JR NC,biggerThan9    ; if it's bigger than 9, move onto Chars
+ADD A,'0'           ; else add ASCII 0
+OUT (0),A        ; otherwise print the character that was found
+POP AF
+RET
+
+biggerThan9:
+ADD A,55          ; otherwise add offset to allow for printing chars
+OUT (0),A        ; otherwise print the character that was found
+POP AF
+RET
