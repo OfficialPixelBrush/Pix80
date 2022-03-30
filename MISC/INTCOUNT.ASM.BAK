@@ -14,6 +14,7 @@ LD A,0b00000110     ; set entry mode
 OUT (1),A
 LD A,0b10000000     ; set DRAM Address
 OUT (1),A
+LD D,0
 
 ORG 0x38
 interrupt:
@@ -25,7 +26,6 @@ LD A,D
 CALL printHex
 EI
 HALT
-
 
 printHex:
 RLCA
@@ -46,12 +46,12 @@ AND 0x0F            ; limit to 4 lowest bits
 CP 0xA              ; check if less than A
 JR NC,biggerThan9    ; if it's bigger than 9, move onto Chars
 ADD A,'0'           ; else add ASCII 0
-CALL printCharToLCD ; then print char
+OUT (0),A        ; otherwise print the character that was found
 POP AF
 RET
 
 biggerThan9:
 ADD A,55          ; otherwise add offset to allow for printing chars
-CALL printCharToLCD ; then print char
+OUT (0),A        ; otherwise print the character that was found
 POP AF
 RET
