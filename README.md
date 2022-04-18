@@ -1,6 +1,9 @@
 # Pix80
 This Repository contains Example Programs and Info for the Pix80
 
+# Emulator
+The Pix80's Emulator can be found at https://github.com/OfficialPixelBrush/Pix80Emu
+
 # Wiki
 https://github.com/OfficialPixelBrush/Pix80/wiki
 
