@@ -33,10 +33,19 @@ POP AF
 OUT (0),A        ; otherwise print the character that was found
 RET
 
-SCROLLLINEDOWN:
-LD A,0b10000000
-IN  A,(1)         ; Read from DRAM
-OUT (1),A
+SCROLLLINEDOWN:    
+PUSH DE          ; Store D in Stack
+                 ; D to store destination, E to store source
+LD A,0b10000000  ; 
+IN  A,(1)        ; Read from DRAM
+
+PUSH AF
+LD A,0x40+0b10000000
+OUT (1),A        ; Set DRAM Pos
+POP AF
+
+OUT (0),A        ; Print Saved Character
+POP DE
 RET
 
 NEXTLINE1:
