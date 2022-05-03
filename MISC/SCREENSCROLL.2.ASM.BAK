@@ -15,6 +15,8 @@ LD A,0b10000000
 OUT (1),A
 LD A,'A'
 OUT (0),A
+CALL SCROLLLINEDOWN
+HALT
 
 
 printCharToLCD:
@@ -37,14 +39,22 @@ SCROLLLINEDOWN:
 PUSH DE          ; Store D in Stack
                  ; D to store destination, E to store source
 LD A,0b10000000  ; 
+OUT (1),A        ;   
 IN  A,(1)        ; Read from DRAM
 
 PUSH AF
-LD A,0x40+0b10000000
-OUT (1),A        ; Set DRAM Pos
+LD A,0b10000011  ; 
+OUT (1),A        ; Reposition Cursor
 POP AF
 
-OUT (0),A        ; Print Saved Character
+OUT (0),A        ; Print read char
+;LD E,A
+
+;LD A,0x40+0b10000000
+;OUT (1),A        ; Set DRAM Pos
+
+;LD A,E
+;OUT (0),A        ; Print Saved Character
 POP DE
 RET
 

@@ -1,0 +1,492 @@
+Hello, and welcome!
+
+In this episode, I'm going to be doing another restoration.
+
+And this time, it's going to be on this
+old Osborne 1.
+
+I actually picked this thing up a couple of
+months ago and it does work although one of
+
+the disk drives is seized up and it just needs
+a lot of cleaning and retrobrite.
+
+So, I'm going to get started on that, and
+hopefully, if everything works out, I'll
+
+give you a good demonstration of it when I'm
+done.
+
+So, before we get started, let's take a
+look at the condition of this thing.
+
+Lazy Game Reviews did a really nice episode
+of tech tales describing some of the history
+
+of this machine, that's definitely worth
+watching if you're interested in the Osborne.
+
+To summarize, the company behind this helped
+coin the industry phrase known as the “Osborne
+
+Effect”, whereby a company can put itself
+out of business by advertising an upcoming
+
+product too early, thus killing sales of the
+current product.
+
+So, one problem, I wanted to point out is
+this cable has been yanked out of place.
+
+This section here should not be here.
+
+The problem is, the cable plugs in here.
+
+But, when you go to close it up, you can't
+because this cable is in the way.
+
+This is supposed to be, right there, like
+that.
+
+So, we need to fix that.
+
+I will plug it in, however.
+
+And, as you can see, it does boot and drive
+A is working.
+
+However, I had this machine apart a few days
+ago just looking around and testing some things
+
+out and suddenly there was a huge POW and
+then smoke started to pour out of the machine.
+
+I managed to catch the aftermath on video,
+and I'll show you later on what caused that.
+
+I decided to start with the keyboard.
+
+It looked easy enough to disassemble.
+
+However, the inside was dirtier than I was
+expecting.
+
+And I also noticed a lot of corrosion on some
+of the metal, especially on these screws.
+
+I began to suspect part of this may have been
+underwater for a time.
+
+I went ahead and popped the little wire out
+here.
+
+I actually think some previous owner may have
+done that on purpose.
+
+Removing the main connector was tough, because
+it was corroded.
+
+I did get it of, but you can see what this
+looks like up close.
+
+I was also a little worried about these screws
+being stuck or just breaking off.
+
+But they seemed to come out pretty easily.
+
+Yeah.
+
+That's pretty yucky.
+
+So, I wasn't sure if these keys were the
+original color or if they have yellowed over
+
+the years.
+
+But, when I look at the side, I can see some
+contrast where less UV light was hiding the
+
+keys.
+
+I decided the best way to deal with the corrosion
+was to just soak the screws in vinegar and
+
+just let them soak overnight.
+
+I also decided, somewhat reluctantly to put
+the connector in there.
+
+I hope I don't regret this, as I've never
+tried anything like this before!
+
+I figured the worse case scenario is I could
+just replace the whole connecter as there
+
+appeared to be enough slack in the cable.
+
+Onto the keys.
+
+I got my keycap puller out that one of my
+fans sent me and started pulling these keys.
+
+This device definitely makes this job easier
+and now I wonder why I didn't have one of
+
+these gizmos years ago.
+
+This little mat appears to be removable.
+
+It's held on by a sticky surface on the
+back.
+
+But, it did come off without too much hassle.
+
+That will make it easier to clean!
+
+There's really nothing else to do here without
+some major disassembly, so I'm going to
+
+leave this part alone.
+
+By the way, I noticed that vinegar was going
+to town on that corrosion.
+
+I took the plastic parts outside to rinse
+with the garden hose.
+
+That will save a lot of time.
+
+However, there was still a lot of residue
+that didn't rinse off, but you can see most
+
+of it just wiped off with a paper towel.
+
+Next I went to town with windex and tried
+to clean as much of the visible gunk off of
+
+the surfaces.
+
+As usual, I used alcohol to get anything else
+that was being stubborn.
+
+The keys actually looked pretty clean, but
+when I tried scrubbing them, I could see dirt
+
+coming off on the paper towel, so I ended
+up cleaning all of the keys one by one.
+
+So the surfaces were all prepared for retrobriting,
+but I had to wait until the next day so there
+
+would be some sunlight.
+
+So, the next morning I went ahead with the
+usual procedure.
+
+Now, I've been experimenting with some new
+and possibly better ways of retrobriting.
+
+However, those experiments are still ongoing,
+so for the meantime I'm going to use the
+
+method that is tried and true and tends to
+work for me.
+
+In the past I have also had good luck with
+just submerging keys in regular 3% liquid
+
+hydrogen peroxide and putting them out in
+the sun.
+
+But it takes quite a lot longer, usually requiring
+several days, and I've just found that using
+
+this stuff works well in just a few hours.
+
+I put them out in the sun early in the morning.
+
+Next I got to work on the larger plastic piece.
+
+I would need two pieces of plastic wrap for
+this.
+
+I always make sure to put a generous coat
+on the plastic wrap itself, then I paint on
+
+another generous coat on the computer parts.
+
+Then I put it out in the Sun.
+
+I've been warned that Osborne plastic may
+be more prone to melting so I wanted to avoid
+
+having this out in the hottest part of the
+day since it is in the middle of Summer in
+
+Texas.
+
+I've had some viewers send me some photos
+of their projects that ended up with a streaked
+
+or uneven appearance, like these.
+
+I've experienced this a few times myself,
+but I've found that it can usually be avoided
+
+by setting a timer to remind me every 20 minutes
+to come rotate the pieces and massage the
+
+cream around to ensure even exposure.
+
+While waiting on the retrobrite, I had a look
+at my screws here.
+
+After rinsing them off, they look much better,
+even if the original shiny coating was eaten
+
+away.
+
+I also took this opportunity to work on this
+little black mat that goes under the keys.
+
+It was actually super easy to clean with some
+windex.
+
+I also wanted to work on this pin header because
+it had a lot of corrosion on it.
+
+I decided to use baking soda.
+
+I just sprayed a little water on it to make
+it like a cream, then used a tooth brush for
+
+about 5 minutes.
+
+I put it under the sink but I was careful
+to only get water just where I needed it to
+
+rinse off the baking soda.
+
+So, the connector isn't perfect, but it
+looks a lot better.
+
+And so, I'll put that little mat back on.
+
+I also noticed there is a little metal brace
+that helps with the space bar but it was kind
+
+of stiff.
+
+So I applied some lithium grease to it in
+3 different places and that did seem to loosen
+
+it up quite a bit.
+
+After the keys had been out for about an hour,
+I decided to have a peak at one and see how
+
+it was coming along.
+
+I could immediately see how the color had
+changed to a more gray type appearance, but
+
+I could tell a hint of tan on one side, so
+I decided to put it back and give them another
+
+hour or two.
+
+This may have been a mistake, as you'll
+see later.
+
+I also brought in the main plastic piece and
+I wanted to check the temperature, and fortunately
+
+it was only 112, so I don't think it's
+in danger of melting yet.
+
+However, I can still tell part of it is yellow
+here on the side, and that was the worst spot,
+
+so I put it back out for another hour or so.
+
+I brought the keys in again and decided they
+were done.
+
+I started drying them off and they looked
+absolutely fantastic.
+
+I couldn't have been happier with the way
+they looked.
+
+But something really odd happened, that's
+never happened to be me before.
+
+About 10 minutes after I dried the keys off,
+I noticed they all started changing colors.
+
+They started getting these weird streak patters
+on them.
+
+After about 20 minutes, every single key was
+afflicted with this and there didn't seem
+
+to be any way to cure it.
+
+It looked like the case plastic might have
+been done so I decided to rinse it off and
+
+have a look.
+
+After drying it off, I could see that it looked
+really good but it still had just a hint of
+
+yellowing on that one corner, which was the
+worst affected part.
+
+That's probably the corner that sat in the
+sun the most during it's life.
+
+But I also realized I forgot to get this edge
+here on the other side, since it is visible
+
+when put together.
+
+So I re-applied the cream and set it back
+out for another couple of hours.
+
+In the meantime, I decided to start putting
+my funny colored keys back on, fortunately,
+
+I had taken a photo of the keyboard and printed
+it out for reference.
+
+I started with the spacebar, which is one
+of only two keys that had a spring underneath,
+
+the other being the return key.
+
+Putting the keys back on is usually the most
+enjoyable part of a keyboard restoration.
+
+Some of these keys can be confusing, though,
+such as these arrow keys, or like the 6 and
+
+the 9 key, as well as a handful of others.
+
+However, if you look closely there is a slant
+to the bottom of the keys that shows which
+
+way they go.
+
+And, well, that's it.
+
+I now have what I could best describe as a
+marble colored keyboard.
+
+Time to re-assemble the rest of the keyboard.
+
+Time to rinse off the plastic one more time,
+and hope it is done.
+
+The top ledge looks good now.
+
+There's still just a hint of discoloration
+there, but I think I managed to get most of
+
+it.
+
+However, by keeping it in the sun longer,
+there's now some streaking here, and also
+
+some on the bottom.
+
+It's not anything I'm terribly worried
+about as it isn't nearly as noticeable as
+
+the keys.
+
+I re-attached this cable and I hope it still
+works.
+
+I did rinse all of the vinegar out and dry
+out out with compressed air.
+
+And I'm going to put the cable through the
+hole here, where I think it is supposed to
+
+go.
+
+So yeah, I think that's better.
+
+And here goes the bottom piece.
+
+Before I begin in the rest of the Osborne,
+I want to test the keyboard to make sure I
+
+didn't damage anything.
+
+I also want to do a test-fit here.
+
+The color difference is remarkable.
+
+It's hard to believe that is the same keyboard
+we saw earlier.
+
+Here's a comparison shot from earlier.
+
+And back to what we have now.
+
+I fired up the Osborne and it does appear
+that all of the keys are working properly.
+
+I tried every key on the keyboard.
+
+All right, so the keyboard took a little longer
+than I was originally anticipating.
+
+And, it didn't come out exactly like I was
+expecting.
+
+I mean, I think I'm pretty happy with the
+appearance of the case plastics, but the keys.
+
+I'm not really sure what to say about those.
+
+They look.
+
+In my opinion, they look better than they
+did before.
+
+Definitely different than they did before.
+
+But they still don't look like I really
+anticipated them looking, so I don't know.
+
+Anyway, as I mentioned earlier in the video,
+I do have some new retrobrite techniques I'm
+
+trying to refine on some test equipment right
+now.
+
+Some stuff that I don't really care about.
+
+And, I'm having some positive results with
+some methods, so I'm going to get to that
+
+eventually, but for the meantime, I'm going
+to go ahead and say this is going to be the
+
+end of part 1 of this video, and I'm about
+to start working on part 2, retrobriting the
+
+case plastics and fixing some the internal
+problems that the Osborne has, as well as
+
+I am going to show you some neat things about
+the Osborne computers in general and how they
+
+work and what you can do with them, and et
+cetera, so stick around for that and I'll
+
+see you next time!
+
