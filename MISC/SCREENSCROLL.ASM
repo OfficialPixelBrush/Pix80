@@ -1,7 +1,5 @@
 ; LCD init
 LD A,0b00111000     ; set screen mode
-OUT (2),A
-LD A,0b00111000     ; set screen mode
 OUT (0),A
 LD A,0b00001100     ; turn on display
 OUT (0),A

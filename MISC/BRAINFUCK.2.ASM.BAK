@@ -1,0 +1,44 @@
+; Use HL as Pointer
+; Use IX for reading Program
+; if '[' && (HL) := 0, inc HL until ']'
+; if ']' && (HL) != 0, dec until '['
+
+LD IX,program
+
+loopThroughProgram:
+LD A,(IX)
+
+; if '>', inc HL
+CP '>'
+JR NZ,notInc
+INC HL
+; if '<', dec HL
+notInc:
+CP '<'
+JR NZ,notDec
+DEC HL
+; if '+', inc (HL)
+notDec:
+CP '+'
+JR NZ,notAdd
+INC (HL)
+; if '-', dec (HL)
+notAdd:
+CP '-'
+JR NZ,notSub
+DEC (HL)
+; if '.', output char that's at (HL)
+notSub:
+CP '-'
+CALL NZ,printCharToLCD
+; if ',', input byte to (HL)
+
+
+INC IX
+JR loopThroughProgram
+HALT
+
+printCharToLCD:
+
+program:
+INCLUDEBINARY "hello.bf"
