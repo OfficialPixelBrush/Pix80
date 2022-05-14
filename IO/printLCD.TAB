@@ -1,5 +1,4 @@
-WRITEHELLOWORLD=56:46:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-EXITHELLO=70:56:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-BACKSPACE=70:69:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-HELLO=70:92:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
-PANDA=86:95:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\printLCD.asm
+BACKSPACE=17:56:0:F:\Pix80\IO\printLCD.asm
+HELLO=17:79:0:F:\Pix80\IO\printLCD.asm
+AFTERHELLO=31:81:0:F:\Pix80\IO\printLCD.asm
+PANDA=31:83:0:F:\Pix80\IO\printLCD.asm
