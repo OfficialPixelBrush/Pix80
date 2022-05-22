@@ -1,0 +1,5 @@
+LCDINST=0:1:0:F:\Pix80\IO\loopHello.asm
+LCDDATA=1:2:0:F:\Pix80\IO\loopHello.asm
+LOOP=0:4:0:F:\Pix80\IO\loopHello.asm
+HELLO=32:27:0:F:\Pix80\IO\loopHello.asm
+AFTERHELLO=46:29:0:F:\Pix80\IO\loopHello.asm
