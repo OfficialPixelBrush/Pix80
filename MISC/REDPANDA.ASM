@@ -1,19 +1,27 @@
 LCDINST: EQU 0
 LCDDATA: EQU 1
 
-; RED PANDA SPIN     
+; **********************
+; *** RED PANDA SPIN *** 
+; **********************
 ; LCD init
-LD A,0b00111000     ; set screen mode
+LD A, 0b00110000 ; Function set (Interface is 8-bits long)
 OUT (LCDINST),A
-LD A,0b00111000     ; set screen mode
+LD A, 0b00110000 ; Function set (Interface is 8-bits long)
 OUT (LCDINST),A
-LD A,0b00001100     ; turn on display
+LD A, 0b00110000 ; Function set (Interface is 8-bits long)
 OUT (LCDINST),A
-LD A,0b00000001     ; clear display
+LD A, 0b00111000 ; Set Number of Lines and Font
 OUT (LCDINST),A
-LD A,0b00000110     ; set entry mode
+LD A, 0b00001000 ; Set Display Control Properties
 OUT (LCDINST),A
-LD A,0b11000000     ; set DRAM Address
+LD A, 0b00000001 ; Clear Screen
+OUT (LCDINST),A
+LD A, 0b00000110 ; Set Entry Mode
+OUT (LCDINST),A
+
+
+LD A,0b10010101     ; set DRAM Address
 OUT (LCDINST),A
 
 ; draw the 8 characters
@@ -21,20 +29,47 @@ LD A,0
 OUT (LCDDATA),A
 LD A,1
 OUT (LCDDATA),A
-LD A,0b10010100     ; set DRAM Address to second row
+LD A,0b10000000 + 0x55     ; set DRAM Address to second row
 OUT (LCDINST),A
 LD A,2
 OUT (LCDDATA),A
 LD A,3
 OUT (LCDDATA),A
 ; very cheap, but functional
-
-LD A,0b11000010     ; set DRAM Address
+LD A,0b11000011     ; set DRAM Address
 OUT (LCDINST),A
-LD A,'/'            ; print /
+LD A,"/"            ; print quote
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"-"            ; print dash
+OUT (LCDDATA),A
+LD A,"'"            ; print dash
 OUT (LCDDATA),A
 
-LD A,0b10000011     ; set DRAM Address
+LD A,0b10000000 + 0x03    ; set DRAM Address
 OUT (LCDINST),A
 ; Print "Hello, world!"
     ; IX used as pointer
@@ -170,7 +205,7 @@ JP pandaLoop
 HALT
 
 hello:
-    DEFM "Hello, world!",0
+    DEFM '|',"Hello, world!",'|',0
 panda0:
     INCLUDEBINARY "redPanda0.bin"
 panda1:
