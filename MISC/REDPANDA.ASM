@@ -5,18 +5,18 @@ LCDDATA: EQU 1
 ; *** RED PANDA SPIN *** 
 ; **********************
 ; LCD init
-LD A, 0b00110000 ; Function set (Interface is 8-bits long)
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
 OUT (LCDINST),A
-LD A, 0b00110000 ; Function set (Interface is 8-bits long)
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
 OUT (LCDINST),A
-LD A, 0b00110000 ; Function set (Interface is 8-bits long)
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
 OUT (LCDINST),A
 LD A, 0b00111000 ; Set Number of Lines and Font
 OUT (LCDINST),A
-LD A, 0b00001000 ; Set Display Control Properties
+LD A, 0b00001111 ; Set Display Control Properties
+OUT (LCDINST),A
 OUT (LCDINST),A
 LD A, 0b00000001 ; Clear Screen
-OUT (LCDINST),A
 LD A, 0b00000110 ; Set Entry Mode
 OUT (LCDINST),A
 
@@ -67,6 +67,16 @@ OUT (LCDDATA),A
 LD A,"-"            ; print dash
 OUT (LCDDATA),A
 LD A,"'"            ; print dash
+OUT (LCDDATA),A
+
+; print second panda
+LD A,0b10010101     ; set DRAM Address
+OUT (LCDINST),A
+IN A,(LCDDATA)
+LD B,A
+LD A,0b10010101+4     ; set DRAM Address
+OUT (LCDINST),A
+LD A,B
 OUT (LCDDATA),A
 
 LD A,0b10000000 + 0x03    ; set DRAM Address
@@ -203,6 +213,14 @@ JP NZ,panda7loop
 
 JP pandaLoop
 HALT
+
+waitForLCDbusyFlag:  
+    PUSH AF
+    IN A,(0)
+    BIT 7,A
+    JR NZ,waitForLCDbusyFlag
+    POP AF
+    RET
 
 hello:
     DEFM '|',"Hello, world!",'|',0

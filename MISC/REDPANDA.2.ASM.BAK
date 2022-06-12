@@ -6,11 +6,19 @@ LCDDATA: EQU 1
 ; **********************
 ; LCD init
 LD A, 0b00110000 ; Function set (Interface is 8-bits long)
-OUT (LCD INST),A
+OUT (LCDINST),A
 LD A, 0b00110000 ; Function set (Interface is 8-bits long)
-OUT (LCD INST),A
+OUT (LCDINST),A
 LD A, 0b00110000 ; Function set (Interface is 8-bits long)
-OUT (LCD INST),A
+OUT (LCDINST),A
+LD A, 0b00111000 ; Set Number of Lines and Font
+OUT (LCDINST),A
+LD A, 0b00001000 ; Set Display Control Properties
+OUT (LCDINST),A
+LD A, 0b00000001 ; Clear Screen
+OUT (LCDINST),A
+LD A, 0b00000110 ; Set Entry Mode
+OUT (LCDINST),A
 
 
 LD A,0b10010101     ; set DRAM Address
