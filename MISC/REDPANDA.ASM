@@ -70,14 +70,14 @@ LD A,"'"            ; print dash
 OUT (LCDDATA),A
 
 ; print second panda
-LD A,0b10010101     ; set DRAM Address
-OUT (LCDINST),A
-IN A,(LCDDATA)
-LD B,A
-LD A,0b10010101+4     ; set DRAM Address
-OUT (LCDINST),A
-LD A,B
-OUT (LCDDATA),A
+;LD A,0b10010101     ; set DRAM Address
+;OUT (LCDINST),A
+;IN A,(LCDDATA)
+;LD B,A
+;LD A,0b10010101+4     ; set DRAM Address
+;OUT (LCDINST),A
+;LD A,B
+;OUT (LCDDATA),A
 
 LD A,0b10000000 + 0x03    ; set DRAM Address
 OUT (LCDINST),A

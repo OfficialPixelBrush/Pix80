@@ -1,67 +1,81 @@
+LCDINST: EQU 0
+LCDDATA: EQU 1
+r_seed: EQU 0x8000
+
+LD A, 15
+LD (r_seed),A
+
 ; LCD init
-LD A,0b00111000     ; set screen mode
-OUT (0),A
-LD A,0b00001100     ; turn on display
-OUT (0),A
-LD A,0b00000001     ; clear display
-OUT (0),A
-LD A,0b00000110     ; set entry mode
-OUT (0),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Set Number of Lines and Font
+OUT (LCDINST),A
+LD A, 0b00001111 ; Set Display Control Properties
+OUT (LCDINST),A
+OUT (LCDINST),A
+LD A, 0b00000001 ; Clear Screen
+LD A, 0b00000110 ; Set Entry Mode
+OUT (LCDINST),A
 
 ; Set CGRAM address
 LD A,0b01000000
-OUT (0),A
+OUT (LCDINST),A
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
 LD A,0b10000
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b10000
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b01000
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00100
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00010
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00001
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00001
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00001
-OUT (1),A
+OUT (LCDDATA),A
 ; Should be backslash
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
 LD A,0b00001
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00001
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00010
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b00100
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b01000
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b10000
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b10000
-OUT (1),A
+OUT (LCDDATA),A
 LD A,0b10000
-OUT (1),A
+OUT (LCDDATA),A
 ; Should be slash
 
 ; Set DDRAM Address
 LD A,0b10000000
-OUT (0),A
+OUT (LCDINST),A
 
 LD HL,0x0000
 
 loop:
-CALL rand_8
+CALL RAND
 PUSH AF
-JP P, printBackslash
+AND 0x1
+JP Z, printBackslash
 LD A,1
 CALL printCharToLCD
 JP exit
@@ -94,27 +108,31 @@ RET
 NEXTLINE1:
 LD D,0
 LD A,0b10000000
-OUT (0),A
+OUT (LCDINST),A
 RET 
 
 NEXTLINE2:
 LD A,0x40+0b10000000
-OUT (0),A
+OUT (LCDINST),A
 RET  
 
 NEXTLINE3:
 LD A,0x14+0b10000000
-OUT (0),A
+OUT (LCDINST),A
 RET 
 
 NEXTLINE4:
 LD A,0x54+0b10000000
-OUT (0),A
+OUT (LCDINST),A
 RET
 
-rand_8:
+
+;-----> Generate a random number
+; output a=answer 0<=a<=255
+; all registers are preserved except: af
+RAND:
           LD          A,(r_seed)          ; get seed
-          AND          0xB8                    ; mask non feedback bits
+          AND         0xB8                    ; mask non feedback bits
           SCF                              ; set carry
           JP          PO,no_clr          ; skip clear if odd
           CCF                              ; complement carry (clear it)
@@ -123,6 +141,3 @@ no_clr:
           RLA                              ; rotate carry into byte
           LD          (r_seed),A          ; save back for next prn
           RET                              ; done
-
-r_seed:
-          DEFB          0x1                    ; prng seed byte (must not be zero)

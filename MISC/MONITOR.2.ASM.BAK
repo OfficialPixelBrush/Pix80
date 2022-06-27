@@ -12,6 +12,10 @@ OUT (1),A
 LD A,0b11000000     ; set DRAM Address
 OUT (1),A
 
+; program start
+; print Memory from 0x0000 until 0x0007
+; 
+
 printCharToLCD:
 CP 32            ; if the Character is printable ASCII
 RET C   ; loop back to check for a new character
@@ -29,3 +33,24 @@ CALL Z, NEXTLINE1
 POP AF
 OUT (0),A        ; otherwise print the character that was found
 RET
+
+NEXTLINE1:
+LD D,0
+LD A,0b10000000
+OUT (1),A
+RET 
+
+NEXTLINE2:
+LD A,0x40+0b10000000
+OUT (1),A
+RET 
+
+NEXTLINE3:
+LD A,0x14+0b10000000
+OUT (1),A
+RET 
+
+NEXTLINE4:
+LD A,0x54+0b10000000
+OUT (1),A
+RET 

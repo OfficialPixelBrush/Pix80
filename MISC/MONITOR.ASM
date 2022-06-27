@@ -1,16 +1,22 @@
+LCDINST: EQU 0
+LCDDATA: EQU 1
+
 ; LCD init
-LD A,0b00111000     ; set screen mode
-OUT (1),A
-LD A,0b00111000     ; set screen mode
-OUT (1),A
-LD A,0b00001100     ; turn on display
-OUT (1),A
-LD A,0b00000001     ; clear display
-OUT (1),A
-LD A,0b00000110     ; set entry mode
-OUT (1),A
-LD A,0b10000000     ; set DRAM Address
-OUT (1),A
+; LCD init
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Set Number of Lines and Font
+OUT (LCDINST),A
+LD A, 0b00001111 ; Set Display Control Properties
+OUT (LCDINST),A
+OUT (LCDINST),A
+LD A, 0b00000001 ; Clear Screen
+LD A, 0b00000110 ; Set Entry Mode
+OUT (LCDINST),A
 
 ; program start
 ; HL used as pointer
@@ -23,7 +29,7 @@ INC HL
 ; output on data bus to LCD
 CALL printHex
 LD A,' '
-OUT (0),A
+OUT (LCDDATA),A
 JR write 
 exit:
 HALT
@@ -77,26 +83,26 @@ CALL NC, NEXTLINE4
 CP 0x50          ; check if A is equal to 0x50
 CALL NC, NEXTLINE1
 POP AF
-OUT (0),A        ; otherwise print the character that was found
+OUT (LCDDATA),A        ; otherwise print the character that was found
 RET
 
 NEXTLINE1:
 LD D,0
 LD A,0b10000000
-OUT (1),A
+OUT (LCDINST),A
 RET 
 
 NEXTLINE2:
 LD A,0x40+0b10000000
-OUT (1),A
+OUT (LCDINST),A
 RET 
 
 NEXTLINE3:
 LD A,0x14+0b10000000
-OUT (1),A
+OUT (LCDINST),A
 RET 
 
 NEXTLINE4:
 LD A,0x50+0b10000000
-OUT (1),A
+OUT (LCDINST),A
 RET 
