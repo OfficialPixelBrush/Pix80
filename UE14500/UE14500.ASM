@@ -1,0 +1,46 @@
+LCDINST: EQU 0
+LCDDATA: EQU 1
+
+; **********************
+; *** UED14500-Pix80 *** 
+; **********************
+; LCD init
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Function set (Interface is 8-bits long)
+OUT (LCDINST),A
+LD A, 0b00111000 ; Set Number of Lines and Font
+OUT (LCDINST),A
+LD A, 0b00001111 ; Set Display Control Properties
+OUT (LCDINST),A
+OUT (LCDINST),A
+LD A, 0b00000001 ; Clear Screen
+LD A, 0b00000110 ; Set Entry Mode
+OUT (LCDINST),A
+
+; Print UE14500 VFD Display Character
+LD A,0b10000000+0x15 ; set DRAM Address
+OUT (LCDINST),A
+LD A,0
+OUT (LCDDATA),A
+
+; Reset Pos
+LD A,0b10000000     ; set DRAM Address
+OUT (LCDINST),A
+
+HALT
+
+; .--------------------.
+; |   Emulator Start   | 
+; '--------------------'
+
+; Read Header (emulator-only)
+  ; Read Delay (just ignore)
+  ; Read Initial Setup
+; Read Instructions until 0x00
+
+
+
+INCLUDEBINARY "hello.emu"
