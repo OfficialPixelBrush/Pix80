@@ -43,4 +43,4 @@ HALT
 
 
 
-INCLUDEBINARY "redPanda7.bin"
+INCLUDEBINARY "hello.emu"
