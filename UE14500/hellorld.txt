@@ -1,0 +1,1164 @@
+[Music]
+
+hello and welcome back to the
+
+culmination of well months of really
+
+hard work and that is that we're trying
+
+to breathe some life back into this
+
+centurion mini computer two episodes ago
+
+we took a really in-depth look at the
+
+diagnostic board and the code that was
+
+stored in the roms on that board and
+
+well between the hardware and the
+
+software we're starting to get an idea
+
+of how things are communicating within
+
+the computer itself
+
+and then in the previous episode we
+
+really wanted to try and get the
+
+computer to display something on the
+
+terminal and up to now it hadn't been
+
+doing that and it turned out that it was
+
+just a couple really
+
+simple mistakes that i had overlooked
+
+the dip switches on the terminal were
+
+reverse of what they should be or at
+
+least what was written on the back of
+
+the terminal and our cable wasn't quite
+
+right now since that episode the only
+
+thing that has changed is i have made
+
+the cable a lot shorter because i don't
+
+need a ton of cable length when the
+
+terminal is going to live right here for
+
+its entire life
+
+but if i need a longer cable i have
+
+plenty over there that i can work and so
+
+that leads us up to today
+
+where we're going to try and plug
+
+this diagnostic board into the computer
+
+and try to get it running custom
+
+centurion code
+
+this is really exciting there's uh
+
+hopefully a lot of very cool tests that
+
+we can check out and uh well since the
+
+last time you guys saw this board the
+
+only thing that's changed is i have
+
+replaced the four roms that were
+
+originally here with just copies of them
+
+so in case it all goes completely wrong
+
+and we burn up the roms we don't burn up
+
+the original ones but it should operate
+
+exactly identically to how it did
+
+40 years ago
+
+and
+
+hopefully we can see some really cool
+
+stuff happen today so let's plug this
+
+into the computer
+
+fire it up and see what happens all
+
+right we've got the diagnostic card
+
+plugged into slot 15 all the way here on
+
+the end we've got the dip switches all
+
+set to zero on the front
+
+and so when we turn the power on what we
+
+really want to see is the hexadecimal
+
+displays here
+
+show something so let's flip the switch
+
+and see what happens
+
+well
+
+the hexadecimal displays aren't showing
+
+anything and if i look up at the
+
+terminal it says d equals as if though
+
+it had just booted normally out of the
+
+bootstrap rom and speaking of the
+
+bootstrap rom if we look at the code for
+
+it the very first instruction is a 1a02
+
+which is a check the sense switch to see
+
+if we should jump straight to diag and
+
+diag is the diagnostic board that we
+
+want to get to it sits at address eight
+
+zero zero one so in order to jump there
+
+we need the synth switch set to one and
+
+i remember mr romain flipping the dip
+
+switches on the front of the cpu six
+
+card here looking for synth switch
+
+one and so if we look at the markings
+
+right in front of the dip switch here we
+
+can see it says uh looks like zero
+
+i maybe i or one and then h r and then
+
+one two three and m and well we've got
+
+one two three right in a row so
+
+let's flip number one and see what
+
+happens all right here goes nothing
+
+we'll turn the power on again and we're
+
+really hoping to see these hexadecimal
+
+displays light up
+
+yes
+
+we have both of the hexadecimal displays
+
+lit up saying zero zero which makes
+
+sense because our dip switch here is all
+
+set to zero if i change one of these
+
+yeah look at that it's a zero one now
+
+that's awesome all right so the
+
+diagnostic board is working uh now we
+
+just got to figure out what each of the
+
+tests do all right i've spent some time
+
+trying to figure out the diagnostic
+
+board and well there's two ways to go
+
+about learning how the diagnostic board
+
+works and what all the tests do
+
+the proper way is to dig through the
+
+code learn what it's trying to do and
+
+figure it out methodically and get the
+
+right answers
+
+the way that i did it was just flipping
+
+switches and pushing buttons and if i'm
+
+honest
+
+that's a lot of fun
+
+now unfortunately i didn't have the
+
+camera running while i was doing all of
+
+that
+
+so you all didn't get to see the crazy
+
+discoveries that i made by just flipping
+
+switches and pushing buttons so
+
+here's a dramatic reenactment
+
+all right flip one switch check the
+
+terminal no nothing yet
+
+flip the next switch
+
+check the terminal
+
+oh
+
+no nothing yet
+
+we're gonna have to get a little more uh
+
+serious i think
+
+terminal oh nothing yet
+
+let's do this
+
+i'm in
+
+all right maybe i went a little heavy on
+
+the dramatic part of the dramatic
+
+reenactment but the gist of the story is
+
+actually true as soon as the diagnostic
+
+card sprung into life the first thing i
+
+did was start flipping switches and
+
+pushing buttons just to see what would
+
+happen and well sure enough at test 0d
+
+it brought up this screen and this was a
+
+massive
+
+moment it meant that the diagnostic card
+
+was communicating perfectly with the
+
+rest of the system and it brought up a
+
+menu to give me options to test
+
+everything
+
+now i'm gonna walk you guys through
+
+these tests but the auxiliary tests are
+
+really just a very late level test
+
+working our way all the way up to test
+
+0d there's a bunch of other tests that
+
+go on first so let's rewind the story a
+
+little bit and we'll start at diagnostic
+
+test 0
+
+and we'll work our way all the way up to
+
+the auxiliary tests here
+
+the majority of the tests are just
+
+displayed using the hexadecimal displays
+
+down here and i've been working very
+
+closely with fire on this and we've been
+
+slowly figuring out what each of the
+
+tests do by looking at the code figuring
+
+out what to expect and then giving it an
+
+actual test on the machine and going
+
+from there and what you can't see is
+
+that there's actually four decimal
+
+points each one of these hex decimal
+
+displays has a right decimal point and a
+
+left decimal point but i think we
+
+figured out what most of the decimal
+
+points mean when the bottom right
+
+decimal point is on by itself that means
+
+that a test is running if the bottom
+
+right and the bottom left decimal point
+
+are both on that means a test passed if
+
+the bottom right decimal point and the
+
+top right decimal point up here are on
+
+that means a test failed test number one
+
+here is a dma register read write test
+
+and if we push the button we can see
+
+both decimal points have come on and
+
+that means that our dma register read
+
+write test has passed test number two is
+
+a memory test this writes the
+
+corresponding address value into each
+
+memory location so if a memory location
+
+is one two three four it writes the
+
+value of one two three four into that
+
+location and if we push the button we
+
+can see that the bottom right came on
+
+for a little while and then the bottom
+
+left came on this means that our memory
+
+test passed but it took about one or two
+
+seconds for the entire test to run and
+
+that's really good news that means that
+
+our memory card is mostly working now
+
+that memory card is a 128k memory card
+
+and i don't know if this test tests all
+
+128k or if it only tests the addressable
+
+60k that it can get to test 0-3 is
+
+we're not entirely sure we think it's
+
+doing some interrupt stuff and if we
+
+push the button well it passed whatever
+
+it is it passed
+
+we don't really know so we'll just go to
+
+the next test test 4 is a mux card
+
+transmit test so if we push the button
+
+here we can see both leds lit up and if
+
+we look at the terminal up top it's just
+
+printing the letter u over and over and
+
+over again and uh that's actually what
+
+it's supposed to do it's just testing
+
+that it can actually send something to
+
+the terminal test 5 and test 6 are both
+
+multiplexer interrupt tests so if we
+
+push the button we can see that the
+
+bottom right comes on to tell us that
+
+the test is running but it's waiting for
+
+some signal to come from the terminal
+
+itself so if i hit a button on the
+
+terminal well we can see that the top
+
+digit turned to 1 and i think this is a
+
+parity error check
+
+but we can also see that it echoed back
+
+whatever i typed on the terminal
+
+and well that tells us that it is
+
+actually functioning now test 6 does the
+
+exact same thing as test 5 but it does
+
+it using interrupts and well it's using
+
+a daisy chain interrupt which means we
+
+need to move the mux card to the very
+
+next slot next to the cpu so we have an
+
+uninterrupted connection on the back
+
+plane but we'll go ahead and skip that
+
+one for now and just work our way up to
+
+test seven now test seven eight and nine
+
+are all hawk drive tests so if i push
+
+the button uh well you can see it's
+
+flashing an error code two seven i'm not
+
+sure what that means but we can see it's
+
+illuminated the top right decimal and
+
+the bottom right decimal and that's
+
+telling us that this test failed and it
+
+fails for all three hawk tests uh which
+
+isn't a surprise at all because the hawk
+
+drive is sitting over on the bench so
+
+next let's jump ahead up to test 0b
+
+and this is actually a copy of the
+
+bootstrap rom in the diagnostic board so
+
+if we hit the button here we can see
+
+both leds come on and then we have our d
+
+equals prompt up on our terminal and
+
+it's operating just as if though the
+
+diagnostic card didn't exist at all and
+
+we were using the bootstrap rom only the
+
+next test 0c is a diagnostic board self
+
+test if it passes it should illuminate
+
+every single light on the hexadecimal
+
+displays here uh yeah and we can see
+
+that it shows eight eight and lights all
+
+four of the dots that tells us that it
+
+passed and then finally we've come full
+
+circle back up to test zero d which are
+
+our auxiliary tests up on the terminal
+
+now these tests are much more
+
+self-explanatory if for example we punch
+
+in zero one for cpu instruction test hit
+
+new line it says cpu instruction test
+
+ctrl c to exit and it just sits here
+
+waiting for me to press ctrl c
+
+if i press ctrl c it says pass press
+
+space and that means we passed our cpu
+
+instruction test now the cpu6 mapping
+
+ram test we don't fully understand yet
+
+if i hit 0 2 and i hit new line it says
+
+mapping ram test and it just kind of
+
+sits here the front panel flag lights
+
+appear to be doing something but none of
+
+the other lights on the front panel are
+
+changing and if i hit control c
+
+uh it it doesn't exit now it could just
+
+be that this is a very very long test
+
+talking with mr romaine he said
+
+sometimes they would let this test run
+
+overnight and i just haven't been
+
+patient enough to let it run its full
+
+course
+
+and i'm going to continue to not be
+
+patient enough so i'm going to reset the
+
+system and to bring us back to the main
+
+screen here if we go to the rom self
+
+test
+
+hit that says pass press space
+
+and now we're getting into tests that it
+
+should absolutely fail and if i run one
+
+of these
+
+well it kind of tries to look for the
+
+phoenix drive
+
+and then it says f out never came on
+
+press space that tells us that we failed
+
+however we can run the rom self tests so
+
+at 0 a
+
+that one passed and 1 1.
+
+that one passed well there we go we've
+
+put the hardware through its paces using
+
+genuine diagnostic tools that were
+
+developed 40 years ago for this machine
+
+and everything seems to be working
+
+perfectly with the exception of all the
+
+drive stuff because well we can't really
+
+test that because the drives are all
+
+super broken
+
+but the fact that this machine is up and
+
+working as well as it is is just
+
+absolutely astonishing
+
+and uh well
+
+i think that's about as far as we can go
+
+with it isn't it um
+
+man that's a little anticlimactic isn't
+
+it
+
+wait what what's that what'd you say
+
+what about test 0a oh i
+
+you're right i did skip a test on the
+
+diagnostic board test 0a yeah
+
+wait what's that
+
+toss what about toss
+
+you know a couple episodes ago i was
+
+really amped up about this thing called
+
+toss or test operating system and as
+
+cool as this stuff is this
+
+certainly doesn't feel like a test
+
+operating system to me uh so yeah i must
+
+have
+
+must have forgotten about toss
+
+no i didn't forget about it of course i
+
+didn't forget about it that's the most
+
+exciting part i'm saving the best for
+
+last
+
+so let's put zero a on the card and i'll
+
+show you what this thing can really do
+
+all right we've got the diagnostic board
+
+set to zero a which is toss so let's
+
+push the button and see what happens all
+
+right we've got eight four six f slash
+
+and a blinking cursor and now this may
+
+seem like a total arbitrary
+
+number but if we look at the code for
+
+toss itself we can see that toss starts
+
+at address 846 f now initially i had no
+
+idea how to actually operate this but
+
+fire who had been digging through the
+
+code let me know that there's really
+
+only two commands that i need to worry
+
+about and that is m and g now if i hit m
+
+and then i punch in a 16-bit address
+
+written out in hexadecimal like say
+
+eight zero
+
+one
+
+and then hit space
+
+it shows me
+
+the value that is stored in that
+
+location of memory now we can see here
+
+that that is 3a if i hit space again it
+
+increments to the next byte 8002
+
+then 8003 8004 8005 8006 8007 and so on
+
+and well i chose memory address 8001
+
+because that's actually where the roms
+
+on the diagnostic board live within the
+
+memory space so i can actually read the
+
+hex directly off of those roms by
+
+reading this memory address and if we
+
+compare it to the rom dumps that we've
+
+taken it is perfectly accurate now i
+
+can't change those because roms are read
+
+only memories so let's go to an address
+
+that i can change let's say m1000
+
+if i hit space well it shows me that ac
+
+is stored in there if i hit space again
+
+af b2 b5 b8 bb be c1 we've got a bunch
+
+of uh seemingly random stuff stored in
+
+there could be a holdover from some of
+
+the tests that we were running so let's
+
+start changing that a bit let's go m1000
+
+if i hit space it shows me what value is
+
+stored in there if i type another value
+
+right now like say f f
+
+then hit space what it does is it writes
+
+ff into
+
+m1000 then it shows me the next byte so
+
+if i write ff again and then i write say
+
+zero zero and then i write say one zero
+
+if we go back and we read
+
+m1000 we can see now it says ffffff00
+
+we have now written specific values into
+
+a specific point in memory now this may
+
+seem really trivial yes we can change
+
+bits of memory but what can we do with
+
+it from there well the next instruction
+
+is
+
+g and this stands for go and if i go to
+
+1 0 0 0 and i hit enter
+
+well you can see that the whole thing
+
+has halted and because what happened is
+
+we went to the address of 1000 and we
+
+started executing this hexadecimal as if
+
+though it were actual software and i'm
+
+not entirely sure what operation ff is
+
+but i know that operation 0 0 is a full
+
+on cpu halt and if we look at the front
+
+panel we can see that the halt light is
+
+illuminated the only way to get out of
+
+here now is to reset the machine but
+
+this means that we can write custom code
+
+directly into the computer and run it
+
+from the terminal that is insane
+
+it's so insane in fact that fire was
+
+really fired up about this and he gave
+
+me a string of hexadecimal to punch in
+
+and i punched it and something really
+
+exciting happened uh but unfortunately
+
+the camera wasn't rolling so i think
+
+it's time for another dramatic
+
+reenactment
+
+[Music]
+
+all right
+
+[Music]
+
+m1000 space 798623
+
+8 e 5
+
+e c
+
+e c
+
+e f
+
+f 2
+
+e c e 4 a
+
+1
+
+8 d
+
+8 a zero zero seven one eight zero zero
+
+one
+
+new line
+
+all right
+
+here goes nothing g one zero zero zero
+
+go
+
+hello world
+
+whatever close enough
+
+yes
+
+well that time we didn't actually go too
+
+heavy on the drama for our dramatic
+
+reenactment that was pretty close to how
+
+i reacted when i saw it print that up
+
+now it's supposed to say hello world uh
+
+and that's totally not on it that was
+
+100 on me i punched in the wrong
+
+hexadecimal in there
+
+but you know i think it's
+
+i think it's hilarious and amazing and
+
+beautiful that the first piece of code
+
+written for the centurion mini computer
+
+in over 40 years
+
+is haloroald it's completely unique and
+
+well i think it's really fitting and you
+
+know what i'm going to wear it like a
+
+badge of honor
+
+but that is an incredible milestone for
+
+us we were able to program completely
+
+custom code and execute it on the actual
+
+hardware so that begs the question
+
+where are we going from here
+
+well
+
+i've kind of given up on the drives for
+
+now not completely i'm going to hang on
+
+to the hawk drive for certain but i
+
+think the phoenix drive is probably a
+
+little out of my wheelhouse i'm gonna
+
+keep an eye out also for any copies of
+
+centurion software i really would like
+
+to
+
+preserve the original software if we can
+
+make backups of it put it on the
+
+internet maybe at archive.org or at the
+
+github
+
+and just have a copy of it out there but
+
+for this actual machine
+
+i don't think the original centurion
+
+software is our best future
+
+because well
+
+now we have toss and from here we can do
+
+a lot of really
+
+really cool things uh as a matter of
+
+fact seeing it print hello world is
+
+just so excited it just opens the door
+
+it it's that same level of excitement
+
+the first time you see a basic prompt
+
+when you were a kid
+
+now
+
+that reference might only
+
+apply to a certain generation
+
+those of us that grew up with computers
+
+that had basic prompts
+
+but that feeling of
+
+anything is possible the sky's the limit
+
+i just have to know how to program it
+
+that's the same feeling that i'm feeling
+
+right now and it's amazing
+
+but programming hexadecimal is kind of a
+
+nightmare so we're working on a couple
+
+things to make that a little easier the
+
+first is that i'm gonna work on building
+
+a custom board that only has
+
+toss on it so that way whenever you boot
+
+the computer on it falls straight into
+
+this prompt right here and i don't have
+
+to continue using the diag board because
+
+if something goes wrong on it i'm going
+
+to feel terrible because that is a
+
+one-of-one item
+
+and then if you fall straight into the
+
+toss prompt you can immediately start
+
+programming but again it has to be in
+
+hexadecimal so fire is working on
+
+wrapping his assembler and disassembler
+
+and a text editor all into a single
+
+package that will be able to sit on a
+
+rom or two roms on that same piece of
+
+custom hardware that i'm planning on
+
+building that allows you to
+
+directly program assembly on here
+
+instead of hexadecimal and that is
+
+getting very close to having a basic
+
+prompt if anything it's actually more
+
+powerful than having a basic prompt
+
+because if you can program assembly you
+
+can do anything with the hardware and
+
+that's going to open the door for a lot
+
+of really cool programs
+
+but there is an issue in that
+
+anything you write an assembly is going
+
+to sit in the memory so first of all
+
+you're limited by how much memory space
+
+you can fill up and well second of all
+
+once you type in your program you can't
+
+save it anywhere so the next step is to
+
+maybe build a
+
+custom controller card for say a floppy
+
+disk that would be really awesome to be
+
+able to type assembly and then save it
+
+to a floppy disk or have somebody else
+
+write up some assembly somewhere else
+
+save that to a floppy disk put it into
+
+the actual machine and run their code on
+
+the real hardware that would be really
+
+epic
+
+but that's really epic for me uh it's
+
+kind of a shame that more people can't
+
+come here and use the real hardware so
+
+one more avenue i want to explore is
+
+finding a way to get this
+
+40 year old piece of equipment online
+
+it has a multiplexer card on the front
+
+which has rs-232 which means we could
+
+hook that up to something like a
+
+raspberry pi and then let people tunnel
+
+in to the actual computer and it doesn't
+
+matter where you are in the world as
+
+long as you have internet access you
+
+could be able to access this machine and
+
+play with the real
+
+hardware
+
+that would be
+
+epic so there you go that's our kind of
+
+road map for the future uh we have a lot
+
+of really cool stuff to start exploring
+
+from here and the centurion build is so
+
+far from over i just thought i'm so
+
+excited i'm so excited there's so many
+
+things we can do so i want to thank you
+
+guys so much for watching and joining me
+
+on this crazy journey that is far far
+
+from over we have months if not years
+
+worth of content left in this machine
+
+and things to explore and learn about it
+
+so i hope to see you guys in the next
+
+episode
+
+you
+
