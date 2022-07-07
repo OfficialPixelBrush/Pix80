@@ -44,8 +44,8 @@ printText:
     JR   NZ,printText
     CALL pushScreenUp
     CALL updateLCD
-    LD B,60
-    LD IY,LCDDISP+60
+    LD B,40
+    LD IY,LCDDISP+40
     JR printText
 textDone:
 CALL updateLCD

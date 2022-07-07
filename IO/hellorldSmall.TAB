@@ -1,0 +1,6 @@
+LCDINST=0:1:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\hellorldSmall.ASM
+LCDDATA=1:2:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\hellorldSmall.ASM
+LCDDRAM=128:3:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\hellorldSmall.ASM
+WRITEHELLOWORLD=36:28:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\hellorldSmall.ASM
+EXIT=50:38:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\hellorldSmall.ASM
+HELLO=51:40:0:C:\Users\tvirtman.SVA\Downloads\Pix80-Code\IO\hellorldSmall.ASM
