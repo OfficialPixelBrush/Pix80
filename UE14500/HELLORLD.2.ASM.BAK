@@ -42,10 +42,10 @@ printText:
     LD A,B
     CP 80
     JR   NZ,printText
-    CALL pushScreenUp
+    CALL Z,pushScreenUp
+    LD B,80
+    LD IY,LCDDISP+60
     CALL updateLCD
-    LD B,40
-    LD IY,LCDDISP+40
     JR printText
 textDone:
 CALL updateLCD

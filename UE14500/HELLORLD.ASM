@@ -161,6 +161,6 @@ POP HL
 RET
 
 text:
-INCLUDEBINARY "hellorld.txt"
-;DEFM "Hellorld!",0
+;INCLUDEBINARY "hellorld.txt"
+DEFM "Hellorld!",0
 DEFB 0
