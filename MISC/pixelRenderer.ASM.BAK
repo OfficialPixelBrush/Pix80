@@ -1,0 +1,16 @@
+; Screen configured as a 20x16p (4x2 chars)
+; B is for X
+; C is for Y 
+pixelLCDdraw:
+; calculate X coordinate
+; get character coordinate (xChar = xTruePixel/5)
+; get pixel coordinate (xPixel = xTruePixel%5)
+
+; calculate Y coordinate
+; get character coordinate (yChar = yTruePixel/8)
+; get pixel coordinate (yPixel = yTruePixel%8)
+
+; draw to screen
+
+modulus:
+
