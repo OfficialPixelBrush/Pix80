@@ -41,20 +41,29 @@ JR C,DIVmaxLoop
 JR Z,DIVmaxLoop
 ; once limit is found, start doing calculations
 LD C,A
-SRA C
-; still needs actual division logic (pls help)
+LD A,B
+DIVloop:
+SRA C ; shift
+CP C
+JR C,DIVloop
+JR Z,DIVloop
+INC E 
+SLA E ; shift over   
+SUB C 
+JR C,DIVloop
+JR Z,DIVloop
 
 
 LD A,B
 CALL printHex
 
-LD A,','
+LD A,' '
 CALL printCharToLCD
 
 LD A,C
 CALL printHex
 
-LD A,','
+LD A,' '
 CALL printCharToLCD
 
 LD A,E

@@ -42,7 +42,7 @@ JR Z,DIVmaxLoop
 ; once limit is found, start doing calculations
 LD C,A
 SRA C
-; still needs actual division logic (pls help)
+DIVexit:
 
 
 LD A,B
