@@ -3,11 +3,6 @@ LCDDATA: EQU 1
 DIVIDEND: EQU 0x8000
 DIVISOR:  EQU 0x8001
 
-LD A,15
-LD (DIVIDEND),A
-LD A,3
-LD (DIVISOR),A
-
 ; LCD init
 ; LCD init
 LD A, 0b00111000 ; Function set (Interface is 8-bits long)
@@ -23,48 +18,11 @@ OUT (LCDINST),A
 OUT (LCDINST),A
 LD A, 0b00000001 ; Clear Screen
 LD A, 0b00000110 ; Set Entry Mode
-OUT (LCDINST),A
+OUT (LCDINST),A                          
 
-; B = DIVIDEND
-; C = DIVISOR
-; E = FRACTION
-LD A,(DIVIDEND)
-LD B,A
-LD A,(DIVISOR)
-LD C,A
-LD A,0
-LD E,A
-
-; loop until limit is found
-LD A,C     ; initalized
-DIVmaxLoop: 
-SLA A
-CP B
-JR C,DIVmaxLoop
-JR Z,DIVmaxLoop
-; once limit is found, start doing calculations
-; calc start
-LD C,A       
-LD A,B 
-tryNext:
-SLA E
-SRA C   
-CP C
-JR C,tryNext
-JR Z,tryNext
-INC E
-SUB C
-; check if C is it's original value again
-;PUSH AF
-;LD A,(DIVISOR)
-;CP C
-;JR NZ,divComplete
-;POP AF
-;JR tryNext
-divComplete:
-
-; still needs actual division logic (pls help)
-
+LD B,5
+LD C,5
+CALL divide
 
 LD A,B
 CALL printHex
@@ -81,8 +39,41 @@ CALL printCharToLCD
 LD A,E
 CALL printHex
 HALT
+
+; A = Accumulator
+; B = DIVIDEND
+; C = DIVISOR
+; D = RESULT
+; E = TMP
+; Initialization
+divide:
+LD A,0
+LD E,A
+
+LD A,B
+;if C > B:
+CP C
+RET C
+RET Z
+;def divide(B, C):
+;    if C > B:
+;        return 0
+;    tmp = C
+;    result = 0
+;    i = 0
+;    while tmp <= B:
+;        tmp = tmp << 1
+;        i += 1
+;    tmp = tmp >> 1
+;    i -= 1
+;    B -= tmp
+;    result += 1 << i
+;    return result + divide(B, C)
+
+LD E,C
  
 printHex:
+PUSH DE
 RLCA
 RLCA
 RLCA
@@ -93,6 +84,7 @@ RLCA
 RLCA
 RLCA
 CALL printHexFrom4Bits   
+POP DE
 RET      
 
 printHexFrom4Bits:

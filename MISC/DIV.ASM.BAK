@@ -54,6 +54,14 @@ JR C,tryNext
 JR Z,tryNext
 INC E
 SUB C
+; check if C is it's original value again
+;PUSH AF
+;LD A,(DIVISOR)
+;CP C
+;JR NZ,divComplete
+;POP AF
+;JR tryNext
+divComplete:
 
 ; still needs actual division logic (pls help)
 
