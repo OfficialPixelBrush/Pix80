@@ -46,21 +46,23 @@ HALT
 ; D = RESULT
 ; E = TMP
 ; Initialization
+;def divide(B, C):
 divide:
 LD A,0
 LD E,A
 
-LD A,B
 ;if C > B:
+LD A,B
 CP C
-RET C
-RET Z
-;def divide(B, C):
-;    if C > B:
-;        return 0
+;     return 0
+RET NC
+RET NZ
 ;    tmp = C
+LD E,C
 ;    result = 0
+LD D,0
 ;    i = 0
+
 ;    while tmp <= B:
 ;        tmp = tmp << 1
 ;        i += 1
@@ -69,8 +71,6 @@ RET Z
 ;    B -= tmp
 ;    result += 1 << i
 ;    return result + divide(B, C)
-
-LD E,C
  
 printHex:
 PUSH DE
