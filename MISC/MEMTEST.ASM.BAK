@@ -21,35 +21,24 @@ OUT (LCDINST),A
 ; program start
 ; HL used as pointer
 LD HL,0
-LD BC,0
-testMem:
-; load bits
-LD A,0b11111111
-; write to HL
-LD (HL),A
-; load from HL
+write:
+; hello offset + pointer
 LD A,(HL)
-; compare contents of HL with 0b11111111
-CP 0b11111111
-JR NZ,memNotWriteable
 ; increment HL
 INC HL
-; check if 0xFFFF has been reached
-LD A,H
-CP 0xFF
-JR Z,exit
-JR testMem 
-memNotWriteable:
-INC BC
-JR testMem
+; output on data bus to LCD
+LD A,' '
+OUT (LCDDATA),A
+JR write 
 exit:
-LD A,B
-CALL printHex
-LD A,C
-CALL printHex
 HALT
-; check Memory r/w from 0x0000 until 0xFFFF
-
+; print Memory from 0x0000 until 0x0003
+  ; load memory location into A
+  ; check upper 4-bits
+  ; print according char 
+  ; check lower 4-bits
+  ; print according char 
+  
 printHex:
 RLCA
 RLCA
