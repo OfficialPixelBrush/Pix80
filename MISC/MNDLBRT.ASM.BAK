@@ -1,0 +1,38 @@
+SCREEN: EQU 0
+
+LD B,2
+LD C,5
+CALL divide
+LD A,B
+OUT (SCREEN),A
+LD A,C
+OUT (SCREEN),A
+HALT
+
+
+; Inputs: 
+; B and C Reg
+; Output: 
+; B Reg, C Reg Remainder
+divide:
+PUSH AF; Push AF as it's only temp used here
+LD A,B ; Load B into A for Math
+LD B,0 ; Zero B to use as counter 
+divideAgain:
+CP C   ; Check if A-C is less than 0
+JP C,divisionFinished  ; if it is, we're done
+SUB C  ; otherwise A = A-C
+INC B
+JP divideAgain
+divisionFinished:         
+POP AF
+RET
+
+; Inputs
+; B and C Reg
+; Output:
+; A Reg
+multiply:
+PUSH BC
+POP BC
+RET
