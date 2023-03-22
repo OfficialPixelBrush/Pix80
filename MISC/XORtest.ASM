@@ -1,0 +1,3 @@
+LD A,0xFF
+LD B,0xF1
+XOR B

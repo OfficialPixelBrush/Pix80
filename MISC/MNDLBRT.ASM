@@ -12,13 +12,10 @@ ZOOM: EQU 10
 LD IX,0
 LD IY,0
 
-LD B,-5
+LD B,15
 LD C,3
+
 CALL divide
-LD A,B
-OUT (SCREEN),A
-LD A,C
-OUT (SCREEN),A
 HALT
 
 
@@ -29,8 +26,13 @@ HALT
 ; Output: 
 ; B Reg, C Reg Remainder
 divide:
-; Account for sign
 PUSH AF; Push AF as it's only temp used here
+LD A,0xFF           
+; test if result will be positive or negative
+XOR B           ;XOR 1111 0001 ; -15
+;INC A           ;INC 0000 1110
+;LD B,A          ;    0000 1111 ;  15
+; check the resulting thing
 LD A,B ; Load B into A for Math
 LD B,0 ; Zero B to use as counter 
 divideAgain:
@@ -41,6 +43,7 @@ INC B
 JR divideAgain
 divisionFinished: 
 LD C,A
+; apply signs
 POP AF
 RET
 
