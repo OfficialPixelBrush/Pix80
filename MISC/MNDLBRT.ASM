@@ -29,6 +29,7 @@ HALT
 ; Output: 
 ; B Reg, C Reg Remainder
 divide:
+; Account for sign
 PUSH AF; Push AF as it's only temp used here
 LD A,B ; Load B into A for Math
 LD B,0 ; Zero B to use as counter 
