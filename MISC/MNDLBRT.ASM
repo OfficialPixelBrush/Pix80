@@ -27,11 +27,11 @@ HALT
 ; B Reg, C Reg Remainder
 divide:
 PUSH AF; Push AF as it's only temp used here
-LD A,0xFF           
-; test if result will be positive or negative
-XOR B           ;XOR 1111 0001 ; -15
-;INC A           ;INC 0000 1110
-;LD B,A          ;    0000 1111 ;  15
+; check if signed
+; if signed
+NEG
+; if no signed just continue
+notsighed:
 ; check the resulting thing
 LD A,B ; Load B into A for Math
 LD B,0 ; Zero B to use as counter 
