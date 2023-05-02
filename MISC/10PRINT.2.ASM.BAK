@@ -1,62 +1,60 @@
 ; LCD init
 LD A,0b00111000     ; set screen mode
-OUT (1),A
-LD A,0b00111000     ; set screen mode
-OUT (1),A
+OUT (0),A
 LD A,0b00001100     ; turn on display
-OUT (1),A
+OUT (0),A
 LD A,0b00000001     ; clear display
-OUT (1),A
+OUT (0),A
 LD A,0b00000110     ; set entry mode
-OUT (1),A
+OUT (0),A
 
 ; Set CGRAM address
 LD A,0b01000000
-OUT (1),A
+OUT (0),A
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
 LD A,0b10000
-OUT (0),A
+OUT (1),A
 LD A,0b10000
-OUT (0),A
+OUT (1),A
 LD A,0b01000
-OUT (0),A
+OUT (1),A
 LD A,0b00100
-OUT (0),A
+OUT (1),A
 LD A,0b00010
-OUT (0),A
+OUT (1),A
 LD A,0b00001
-OUT (0),A
+OUT (1),A
 LD A,0b00001
-OUT (0),A
+OUT (1),A
 LD A,0b00001
-OUT (0),A
+OUT (1),A
 ; Should be backslash
 
 ; Write Data to Screen
 ; Last 3 bits shouldn't matter
 LD A,0b00001
-OUT (0),A
+OUT (1),A
 LD A,0b00001
-OUT (0),A
+OUT (1),A
 LD A,0b00010
-OUT (0),A
+OUT (1),A
 LD A,0b00100
-OUT (0),A
+OUT (1),A
 LD A,0b01000
-OUT (0),A
+OUT (1),A
 LD A,0b10000
-OUT (0),A
+OUT (1),A
 LD A,0b10000
-OUT (0),A
+OUT (1),A
 LD A,0b10000
-OUT (0),A
+OUT (1),A
 ; Should be slash
 
 ; Set DDRAM Address
 LD A,0b10000000
-OUT (1),A
+OUT (0),A
 
 LD HL,0x0000
 
@@ -90,28 +88,28 @@ CALL Z, NEXTLINE4
 CP 0x50          ; check if A is equal to 0x50
 CALL Z, NEXTLINE1
 POP AF
-OUT (0),A        ; otherwise print the character that was found
+OUT (1),A        ; otherwise print the character that was found
 RET
 
 NEXTLINE1:
 LD D,0
 LD A,0b10000000
-OUT (1),A
+OUT (0),A
 RET 
 
 NEXTLINE2:
 LD A,0x40+0b10000000
-OUT (1),A
-RET 
+OUT (0),A
+RET  
 
 NEXTLINE3:
 LD A,0x14+0b10000000
-OUT (1),A
+OUT (0),A
 RET 
 
 NEXTLINE4:
 LD A,0x54+0b10000000
-OUT (1),A
+OUT (0),A
 RET
 
 rand_8:
