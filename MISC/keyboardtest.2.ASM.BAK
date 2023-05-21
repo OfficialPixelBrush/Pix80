@@ -1,0 +1,12 @@
+MEM0: EQU     0b00000000
+KEYBOARD: EQU 0b00010000
+; KEYBOARD TEST
+EI ; Enable interrupts
+IM 0 ; Interrupt Mode 0: External Hardware
+getNextInput:
+HALT ; Wait for next keyboard input
+IN  A,(KEYBOARD) ; Read it in+
+OUT (MEM0),A     ; Print it out
+JR getNextInput  ; Jump back
+
+DI ; Disable interrupts

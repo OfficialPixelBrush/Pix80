@@ -1,0 +1,15 @@
+MEM0=0:1:0:F:\Pix80\MISC\keyboardtest.ASM
+KEYBOARD=16:2:0:F:\Pix80\MISC\keyboardtest.ASM
+CMD=32768:3:0:F:\Pix80\MISC\keyboardtest.ASM
+STR=36864:4:0:F:\Pix80\MISC\keyboardtest.ASM
+NEWLINE=10:5:0:F:\Pix80\MISC\keyboardtest.ASM
+NULL=0:6:0:F:\Pix80\MISC\keyboardtest.ASM
+GETNEXTINPUT=6:13:0:F:\Pix80\MISC\keyboardtest.ASM
+CHECKCOMMAND=24:27:0:F:\Pix80\MISC\keyboardtest.ASM
+STRCMP=58:42:0:F:\Pix80\MISC\keyboardtest.ASM
+PRINTSTR=74:53:0:F:\Pix80\MISC\keyboardtest.ASM
+STRINGEND=87:60:0:F:\Pix80\MISC\keyboardtest.ASM
+TESTSTRING=88:63:0:F:\Pix80\MISC\keyboardtest.ASM
+EXAMPLECOMMAND=108:66:0:F:\Pix80\MISC\keyboardtest.ASM
+EXAMPLECOMMANDOUTPUT=114:69:0:F:\Pix80\MISC\keyboardtest.ASM
+UNKNOWNCOMMAND=130:72:0:F:\Pix80\MISC\keyboardtest.ASM
