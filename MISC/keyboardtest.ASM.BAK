@@ -1,14 +1,99 @@
 MEM0: EQU     0b00000000
 KEYBOARD: EQU 0b00010000
-
-ORG 0000h
+CMD: EQU 0x8000
+STR: EQU 0x9000
+NEWLINE: EQU 0x0A
+NULL: EQU 0x00
+; IX = Command Pointer
+; IY = String Pointer
+LD IX,CMD      
 ; KEYBOARD TEST
-EI ; Enable interrupts
-IM 1 ; Interrupt Mode 0
-getNextInput:
-HALT ; Wait for next keyboard input
+IM 0 ; Interrupt Mode 0
+LD A,'>'
+OUT (MEM0),A
 
-ORG 38h
-IN  A,(KEYBOARD) ; Read it in
-OUT (MEM0),A     ; Print it out
+getNextInput:
+EI ; Renable interrupts
+; NOTE: HALT disables interrupts after being triggered
+; So interrupts need to be re-enabled every time
+HALT ; Wait for next keyboard input
+IN  A,(KEYBOARD) ; Read A in
+CP 13 ; Check if carriage return
+; If Zero flag is triggered, newline has been entered
+OUT (MEM0),A ; Doesn't affect flags
+LD (IX),A    ; Doesn't affect flags
+INC IX       ; Doesn't affect flags
+LD IY,exampleCommand1
+CALL Z,checkCommand ; Compare string
 JR getNextInput  ; Jump back
+
+; IY will be loaded with pointer to command to check
+checkCommand:
+; Print Newline
+LD A,NEWLINE
+OUT (MEM0),A
+; Compare string at CMD and STR
+LD IX,CMD
+CALL strcmp ; Should set Zero Flag if same
+LD IY,exampleCommand1Output
+CALL Z,printstr            ; If Same, Print Output
+LD IY,unknownCommand
+CALL NZ,printstr           ; IF Different, Print Invalid
+CALL clearCmdBuffer
+LD A,'>'
+OUT (MEM0),A
+LD IX,CMD
+RET
+
+strcmp:
+LD A,(IY) ; Load content of IY in
+CP NULL   ; Check for Null pointer
+RET Z     ; Exit if NULL
+CP (IX)   ; Compare against IX
+RET NZ    ; Exit if not the same
+INC IX
+INC IY
+JR strcmp
+
+; Print string at location given by STR
+printstr:
+LD A,(IY) ; load value in
+CP NULL
+JR Z,stringEnd 
+OUT (MEM0),A
+INC IY
+JR printstr
+stringEnd:
+RET
+
+; probably faster to just check until end of actually written text
+; instead of clearing entire buffer
+clearCmdBuffer:
+LD IX,CMD
+LD A,0x00
+LD B,0xFF
+clearCmdBufferLoop:
+CP B
+RET Z ; Exit if Zero
+LD (IX),NULL
+INC IX
+INC A
+JR clearCmdBufferLoop
+
+testString:
+DEFM "Type something in!",NEWLINE,NULL
+
+exampleCommand1:
+DEFM "hello",NULL
+
+exampleCommand1Output:
+DEFM "Hello there :)",NEWLINE,NULL
+
+exampleCommand2:
+DEFM "test",NULL
+
+exampleCommand2Output:
+DEFM "This is a test!",NEWLINE,NULL
+
+unknownCommand:
+DEFM "Unknown Command",NEWLINE,NULL
