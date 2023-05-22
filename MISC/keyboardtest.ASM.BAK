@@ -36,7 +36,6 @@ CALL Z,instructionAnalysis
 JR getNextInput  ; Jump back
 
 instructionAnalysis:
-PUSH BC
 ; Print Newline
 LD A,NEWLINE
 OUT (MEM0),A
@@ -62,10 +61,32 @@ LD IX,CMD
 RET
 
 ReadInstruction:
-CALL asciiToWord
+CALL asciiToWord ; load into HL
+INC IX ; go to next char
+LD A,(IX)
+CP '-'
+JR Z,ReadInstructionMultiple
 LD A,(HL)
 CALL printByte
 ;OUT (HEXPRINT),A ; implement hex to ascii routine
+RET
+ReadInstructionMultiple:
+EX DE,HL ; faster than LD
+CALL asciiToWord ; load next address
+; start address in DE, end address in HL
+; check if DE == HL
+; TODO: Make this work!!!!
+LD A,D
+CP H
+JR NZ,wordIsNotTheSame
+LD A,E
+CP L
+JR NZ,wordIsNotTheSame
+LD A,(DE)
+CALL printByte
+INC DE
+; if not increment DE
+wordIsNotTheSame:
 RET
 
 WriteInstruction:
@@ -82,11 +103,6 @@ RET
 ExecuteInstruction:
 CALL asciiToWord
 JP (HL)
-RET
-
-InvalidInstruction:
-LD IY,unknownCommand
-CALL printstr
 RET
 
 asciiToWord:
@@ -180,12 +196,10 @@ JR strcmp
 printstr:
 LD A,(IY) ; load value in
 CP NULL
-JR Z,stringEnd 
+RET Z
 OUT (MEM0),A
 INC IY
 JR printstr
-stringEnd:
-RET
 
 ; probably faster to just check until end of actually written text
 ; instead of clearing entire buffer

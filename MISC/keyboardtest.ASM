@@ -1,3 +1,4 @@
+MAXCOMMANDLENGTH: EQU 0xFF
 MEM0:     EQU 0b00000000
 KEYBOARD: EQU 0b00010000
 HEXPRINT: EQU 0b00100000
@@ -64,29 +65,35 @@ ReadInstruction:
 CALL asciiToWord ; load into HL
 INC IX ; go to next char
 LD A,(IX)
-CP '-'
+CP ':'
 JR Z,ReadInstructionMultiple
 LD A,(HL)
 CALL printByte
-;OUT (HEXPRINT),A ; implement hex to ascii routine
 RET
 ReadInstructionMultiple:
-EX DE,HL ; faster than LD
+INC IX   ; advance to next character to read
+         ; word correctly
+EX DE,HL ; HL -> DE
 CALL asciiToWord ; load next address
 ; start address in DE, end address in HL
 ; check if DE == HL
 ; TODO: Make this work!!!!
-LD A,D
-CP H
-JR NZ,wordIsNotTheSame
-LD A,E
-CP L
-JR NZ,wordIsNotTheSame
+nextCycleOfRead:
+LD A,H
+CP D
+JR NZ,wordIsNotTheSameUpper
+LD A,L
+CP E
+JR Z,wordIsTheSameLower
+wordIsNotTheSameUpper:
 LD A,(DE)
-CALL printByte
-INC DE
+CALL printByte   ; print the found byte
+LD A,' '
+OUT (MEM0),A     ; add a space for readability
+INC DE           ; go to next mem location
+JR nextCycleOfRead
 ; if not increment DE
-wordIsNotTheSame:
+wordIsTheSameLower:
 RET
 
 WriteInstruction:
@@ -106,6 +113,7 @@ JP (HL)
 RET
 
 asciiToWord:
+LD HL,0x0000
 CALL asciiToByte
 LD H,L
 CALL asciiToByte
@@ -206,7 +214,7 @@ JR printstr
 clearCmdBuffer:
 LD IX,CMD
 LD A,0x00
-LD B,0x10 ; Buffer is probably not gonna be 256 Bytes
+LD B,MAXCOMMANDLENGTH ; Buffer is probably not gonna be 256 Bytes
 clearCmdBufferLoop:
 CP B
 RET Z ; Exit if Zero
