@@ -1,8 +1,8 @@
-MEM0: EQU     0b00000000
+MEM0:     EQU 0b00000000
 KEYBOARD: EQU 0b00010000
-Device2:  EQU 0b00100000
-CMD: EQU 0x8000
-STR: EQU 0x9000
+HEXPRINT: EQU 0b00100000
+CMD: EQU 0xF000
+STR: EQU 0xE000
 NEWLINE: EQU 0x0A
 NULL: EQU 0x00
 ; IX = Command Pointer
@@ -36,20 +36,20 @@ CALL Z,instructionAnalysis
 JR getNextInput  ; Jump back
 
 instructionAnalysis:
-PUSH BC
 ; Print Newline
 LD A,NEWLINE
 OUT (MEM0),A
 ; Check first Character of command to select mode
 LD IX,CMD
 LD A,(IX)
+; Check instruction
 CP 'R'
 CALL Z,ReadInstruction
 CP 'W'
 CALL Z,WriteInstruction
 CP 'E'
 CALL Z,ExecuteInstruction
-POP BC
+; Fall through
 CALL clearCmdBuffer
 ; Print Newline
 LD A,NEWLINE
@@ -61,15 +61,48 @@ LD IX,CMD
 RET
 
 ReadInstruction:
-CALL asciiToWord
+CALL asciiToWord ; load into HL
+INC IX ; go to next char
+LD A,(IX)
+CP '-'
+JR Z,ReadInstructionMultiple
 LD A,(HL)
-OUT (Device2),A
+CALL printByte
+;OUT (HEXPRINT),A ; implement hex to ascii routine
+RET
+ReadInstructionMultiple:
+EX DE,HL ; faster than LD
+CALL asciiToWord ; load next address
+; start address in DE, end address in HL
+; check if DE == HL
+; TODO: Make this work!!!!
+LD A,D
+CP H
+JR NZ,wordIsNotTheSame
+LD A,E
+CP L
+JR NZ,wordIsNotTheSame
+LD A,(DE)
+CALL printByte
+INC DE
+; if not increment DE
+wordIsNotTheSame:
 RET
 
 WriteInstruction:
+CALL asciiToByte ; read byte
+PUSH AF ; push AF to stack
+INC IX ; go to next char
+LD A,(IX)
+CP ','
+CALL Z,asciiToWord ; implement Auto increment
+POP AF
+LD (HL),A
 RET
 
 ExecuteInstruction:
+CALL asciiToWord
+JP (HL)
 RET
 
 asciiToWord:
@@ -97,6 +130,21 @@ OR L
 LD L,A 
 RET
 
+; printByte
+; byte to print in A
+printByte:
+LD L,A
+SRL A
+SRL A
+SRL A
+SRL A  ; extract upper nibble
+CALL hexToAscii
+OUT (MEM0),A
+LD A,L
+CALL hexToAscii
+OUT (MEM0),A
+RET
+
 ; converts whatever char is in A into A
 ; A = (byte)A
 asciiToHex:
@@ -106,23 +154,33 @@ RET C    ; Exit if greater than '@' (0x10)
 SUB 0x07 ; Adjust to make letters work
 RET
 
-; IY will be loaded with pointer to command to check
-checkCommand:
-; Print Newline
-LD A,NEWLINE
-OUT (MEM0),A
-; Compare string at CMD and STR
-LD IX,CMD
-CALL strcmp ; Should set Zero Flag if same
-LD IY,exampleCommand1Output
-CALL Z,printstr            ; If Same, Print Output
-LD IY,unknownCommand
-CALL NZ,printstr           ; IF Different, Print Invalid
-CALL clearCmdBuffer
-LD A,'>'
-OUT (MEM0),A
-LD IX,CMD
+; converts whatever number is given into ASCII
+; A = (char)A
+hexToAscii:
+AND 0x0F ; Make sure we're only dealing with lower nibble
+ADD A,0x30
+CP 0x3A  ; Check if greater than 9
+RET C
+ADD A,0x07 ; Adjust to get to letters
 RET
+
+; IY will be loaded with pointer to command to check
+; checkCommand:
+; Print Newline
+; LD A,NEWLINE
+; OUT (MEM0),A
+; Compare string at CMD and STR
+; LD IX,CMD
+; CALL strcmp ; Should set Zero Flag if same
+; LD IY,exampleCommand1Output
+; CALL Z,printstr            ; If Same, Print Output
+; LD IY,unknownCommand
+; CALL NZ,printstr           ; IF Different, Print Invalid
+; CALL clearCmdBuffer
+; LD A,'>'
+; OUT (MEM0),A
+; LD IX,CMD
+; RET
 
 strcmp:
 LD A,(IY) ; Load content of IY in
@@ -138,12 +196,10 @@ JR strcmp
 printstr:
 LD A,(IY) ; load value in
 CP NULL
-JR Z,stringEnd 
+RET Z
 OUT (MEM0),A
 INC IY
 JR printstr
-stringEnd:
-RET
 
 ; probably faster to just check until end of actually written text
 ; instead of clearing entire buffer
@@ -159,20 +215,7 @@ INC IX
 INC A
 JR clearCmdBufferLoop
 
-testString:
-DEFM "Type something in!",NEWLINE,NULL
-
-exampleCommand1:
-DEFM "hello",NULL
-
-exampleCommand1Output:
-DEFM "Hello there :)",NEWLINE,NULL
-
-exampleCommand2:
-DEFM "test",NULL
-
-exampleCommand2Output:
-DEFM "This is a test!",NEWLINE,NULL
-
 unknownCommand:
-DEFM "Unknown Command",NEWLINE,NULL
+DEFM "Unknown",NULL
+failedAccessingROM:
+DEFM "Cannot access ROM",NULL
