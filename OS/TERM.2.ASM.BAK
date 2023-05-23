@@ -1,6 +1,6 @@
 MAXCOMMANDLENGTH: EQU 0xFF
 MEM0:     EQU 0b00000000
-KEYBOARD: EQU 0b00010000
+TERMINAL: EQU 0b00010000
 HEXPRINT: EQU 0b00100000
 CMD: EQU 0xF000
 STR: EQU 0xE000
@@ -14,14 +14,14 @@ CALL printstr
 ; KEYBOARD TEST
 IM 0 ; Interrupt Mode 0
 LD A,'>'
-OUT (MEM0),A
+OUT (TERMINAL),A
 
 getNextInput:
 EI ; Renable interrupts
 ; NOTE: HALT disables interrupts after being triggered
 ; So interrupts need to be re-enabled every time
 HALT ; Wait for next keyboard input
-IN  A,(KEYBOARD) ; Read A in
+IN  A,(TERMINAL) ; Read A in
 CP 8  ; Check if backspace
 JR NZ,skipBackspace ; Doesn't visually update yet, but works!
 DEC IX
@@ -30,7 +30,7 @@ JR getNextInput
 skipBackspace:
 CP 13 ; Check if carriage return
 ; If Zero flag is triggered, newline has been entered
-OUT (MEM0),A ; Doesn't affect flags
+OUT (TERMINAL),A ; Doesn't affect flags
 LD (IX),A    ; Doesn't affect flags
 INC IX       ; Doesn't affect flags
 ;LD IY,exampleCommand1
@@ -41,7 +41,7 @@ JR getNextInput  ; Jump back
 instructionAnalysis:
 ; Print Newline
 LD A,NEWLINE
-OUT (MEM0),A
+OUT (TERMINAL),A
 ; Check first Character of command to select mode
 LD IX,CMD
 LD A,(IX)
@@ -56,10 +56,10 @@ CALL Z,ExecuteInstruction
 CALL clearCmdBuffer
 ; Print Newline
 LD A,NEWLINE
-OUT (MEM0),A
+OUT (TERMINAL),A
 ; Print leading char
 LD A,'>'
-OUT (MEM0),A
+OUT (TERMINAL),A
 LD IX,CMD
 RET
 
@@ -81,7 +81,7 @@ ReadInstructionMultiple:
         LD A, (DE)
         CALL printByte   ; print the found byte
         LD A, ' '
-        OUT (MEM0), A     ; add a space for readability
+        OUT (TERMINAL), A     ; add a space for readability
         INC DE           ; go to next mem location
         LD A,D
         CP H             ; compare current address with end address
@@ -164,10 +164,10 @@ SRL A
 SRL A
 SRL A  ; extract upper nibble
 CALL hexToAscii
-OUT (MEM0),A
+OUT (TERMINAL),A
 LD A,L
 CALL hexToAscii
-OUT (MEM0),A
+OUT (TERMINAL),A
 POP HL
 RET
 
@@ -223,7 +223,7 @@ printstr:
 LD A,(IY) ; load value in
 CP NULL
 RET Z
-OUT (MEM0),A
+OUT (TERMINAL),A
 INC IY
 JR printstr
 
