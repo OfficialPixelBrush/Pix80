@@ -1,3 +1,4 @@
+MAXCOMMANDLENGTH: EQU 0xFF
 MEM0:     EQU 0b00000000
 KEYBOARD: EQU 0b00010000
 HEXPRINT: EQU 0b00100000
@@ -61,44 +62,50 @@ LD IX,CMD
 RET
 
 ReadInstruction:
-CALL asciiToWord ; load into HL
-INC IX ; go to next char
-LD A,(IX)
-CP '-'
-JR Z,ReadInstructionMultiple
-LD A,(HL)
-CALL printByte
-;OUT (HEXPRINT),A ; implement hex to ascii routine
-RET
+    CALL asciiToWord ; load start address into HL
+    LD DE, HL ; copy start address to DE
+    INC IX ; go to next char
+    LD A, (IX)
+    CP ':'
+    JR Z, ReadInstructionMultiple
+    LD A, (HL)
+    CALL printByte
+    RET
+
 ReadInstructionMultiple:
-EX DE,HL ; faster than LD
-CALL asciiToWord ; load next address
-; start address in DE, end address in HL
-; check if DE == HL
-; TODO: Make this work!!!!
-LD A,D
-CP H
-JR NZ,wordIsNotTheSame
-LD A,E
-CP L
-JR NZ,wordIsNotTheSame
-LD A,(DE)
-CALL printByte
-INC DE
-; if not increment DE
-wordIsNotTheSame:
-RET
+    EX DE, HL ; DE <- HL
+    CALL asciiToWord ; load end address into HL
+    nextCycleOfRead:
+        LD A, (DE)
+        CALL printByte   ; print the found byte
+        LD A, ' '
+        OUT (MEM0), A     ; add a space for readability
+        INC DE           ; go to next mem location
+        LD A,D
+        CP H             ; compare current address with end address
+        JP NZ, nextCycleOfRead
+        LD A,E
+        CP L
+        JP NZ, nextCycleOfRead
+    RET
+
 
 WriteInstruction:
-CALL asciiToByte ; read byte
-PUSH AF ; push AF to stack
+;read address
+;read byte
+;auto increment address for every subsequent byte
+CALL asciiToWord
+readNextByte:
 INC IX ; go to next char
 LD A,(IX)
 CP ','
-CALL Z,asciiToWord ; implement Auto increment
-POP AF
+RET NZ
+PUSH HL
+CALL Z,asciiToByte ; implement Auto increment
+POP HL
 LD (HL),A
-RET
+INC HL
+JR readNextByte
 
 ExecuteInstruction:
 CALL asciiToWord
@@ -106,6 +113,7 @@ JP (HL)
 RET
 
 asciiToWord:
+LD HL,0x0000
 CALL asciiToByte
 LD H,L
 CALL asciiToByte
@@ -130,9 +138,17 @@ OR L
 LD L,A 
 RET
 
+printWord:
+LD A,H
+CALL printByte
+LD A,L
+CALL printByte
+RET
+
 ; printByte
 ; byte to print in A
 printByte:
+PUSH HL
 LD L,A
 SRL A
 SRL A
@@ -143,6 +159,7 @@ OUT (MEM0),A
 LD A,L
 CALL hexToAscii
 OUT (MEM0),A
+POP HL
 RET
 
 ; converts whatever char is in A into A
@@ -206,7 +223,7 @@ JR printstr
 clearCmdBuffer:
 LD IX,CMD
 LD A,0x00
-LD B,0x10 ; Buffer is probably not gonna be 256 Bytes
+LD B,MAXCOMMANDLENGTH ; Buffer is probably not gonna be 256 Bytes
 clearCmdBufferLoop:
 CP B
 RET Z ; Exit if Zero

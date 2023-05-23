@@ -1,3 +1,4 @@
+MAXCOMMANDLENGTH: EQU 0xFF
 MEM0:     EQU 0b00000000
 KEYBOARD: EQU 0b00010000
 HEXPRINT: EQU 0b00100000
@@ -36,7 +37,6 @@ CALL Z,instructionAnalysis
 JR getNextInput  ; Jump back
 
 instructionAnalysis:
-PUSH BC
 ; Print Newline
 LD A,NEWLINE
 OUT (MEM0),A
@@ -62,11 +62,33 @@ LD IX,CMD
 RET
 
 ReadInstruction:
-CALL asciiToWord
-LD A,(HL)
-CALL printByte
-;OUT (HEXPRINT),A ; implement hex to ascii routine
-RET
+    CALL asciiToWord ; load start address into HL
+    LD DE, HL ; copy start address to DE
+    INC IX ; go to next char
+    LD A, (IX)
+    CP ':'
+    JR Z, ReadInstructionMultiple
+    LD A, (HL)
+    CALL printByte
+    RET
+
+ReadInstructionMultiple:
+    EX DE, HL ; DE <- HL
+    CALL asciiToWord ; load end address into HL
+    nextCycleOfRead:
+        LD A, (DE)
+        CALL printByte   ; print the found byte
+        LD A, ' '
+        OUT (MEM0), A     ; add a space for readability
+        INC DE           ; go to next mem location
+        LD A,D
+        CP H             ; compare current address with end address
+        JP NZ, nextCycleOfRead
+        LD A,E
+        CP L
+        JP NZ, nextCycleOfRead
+    RET
+
 
 WriteInstruction:
 CALL asciiToByte ; read byte
@@ -84,12 +106,8 @@ CALL asciiToWord
 JP (HL)
 RET
 
-InvalidInstruction:
-LD IY,unknownCommand
-CALL printstr
-RET
-
 asciiToWord:
+LD HL,0x0000
 CALL asciiToByte
 LD H,L
 CALL asciiToByte
@@ -117,6 +135,7 @@ RET
 ; printByte
 ; byte to print in A
 printByte:
+PUSH HL
 LD L,A
 SRL A
 SRL A
@@ -127,6 +146,7 @@ OUT (MEM0),A
 LD A,L
 CALL hexToAscii
 OUT (MEM0),A
+POP HL
 RET
 
 ; converts whatever char is in A into A
@@ -180,19 +200,17 @@ JR strcmp
 printstr:
 LD A,(IY) ; load value in
 CP NULL
-JR Z,stringEnd 
+RET Z
 OUT (MEM0),A
 INC IY
 JR printstr
-stringEnd:
-RET
 
 ; probably faster to just check until end of actually written text
 ; instead of clearing entire buffer
 clearCmdBuffer:
 LD IX,CMD
 LD A,0x00
-LD B,0x10 ; Buffer is probably not gonna be 256 Bytes
+LD B,MAXCOMMANDLENGTH ; Buffer is probably not gonna be 256 Bytes
 clearCmdBufferLoop:
 CP B
 RET Z ; Exit if Zero

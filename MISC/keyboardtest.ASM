@@ -8,7 +8,9 @@ NEWLINE: EQU 0x0A
 NULL: EQU 0x00
 ; IX = Command Pointer
 ; IY = String Pointer
-LD IX,CMD      
+LD IX,CMD
+LD IY,startupMessage
+CALL printstr     
 ; KEYBOARD TEST
 IM 0 ; Interrupt Mode 0
 LD A,'>'
@@ -62,50 +64,57 @@ LD IX,CMD
 RET
 
 ReadInstruction:
-CALL asciiToWord ; load into HL
-INC IX ; go to next char
-LD A,(IX)
-CP ':'
-JR Z,ReadInstructionMultiple
-LD A,(HL)
-CALL printByte
-RET
+    CALL asciiToWord ; load start address into HL
+    LD DE, HL ; copy start address to DE
+    INC IX ; go to next char
+    LD A, (IX)
+    CP ':'
+    JR Z, ReadInstructionMultiple
+    LD A, (HL)
+    CALL printByte
+    RET
+
 ReadInstructionMultiple:
-INC IX   ; advance to next character to read
-         ; word correctly
-EX DE,HL ; HL -> DE
-CALL asciiToWord ; load next address
-; start address in DE, end address in HL
-; check if DE == HL
-; TODO: Make this work!!!!
-nextCycleOfRead:
-LD A,H
-CP D
-JR NZ,wordIsNotTheSameUpper
-LD A,L
-CP E
-JR Z,wordIsTheSameLower
-wordIsNotTheSameUpper:
-LD A,(DE)
-CALL printByte   ; print the found byte
-LD A,' '
-OUT (MEM0),A     ; add a space for readability
-INC DE           ; go to next mem location
-JR nextCycleOfRead
-; if not increment DE
-wordIsTheSameLower:
-RET
+    EX DE, HL ; DE <- HL
+    CALL asciiToWord ; load end address into HL
+    nextCycleOfRead:
+        LD A, (DE)
+        CALL printByte   ; print the found byte
+        LD A, ' '
+        OUT (MEM0), A     ; add a space for readability
+        INC DE           ; go to next mem location
+        LD A,D
+        CP H             ; compare current address with end address
+        JP NZ, nextCycleOfRead
+        LD A,E
+        CP L
+        JP NZ, nextCycleOfRead
+    RET
+
 
 WriteInstruction:
-CALL asciiToByte ; read byte
-PUSH AF ; push AF to stack
+;read address
+;read byte
+;auto increment address for every subsequent byte
+CALL asciiToWord
+readNextByte:
 INC IX ; go to next char
 LD A,(IX)
 CP ','
-CALL Z,asciiToWord ; implement Auto increment
-POP AF
-LD (HL),A
+RET NZ
+PUSH HL
+CALL Z,asciiToByte ; implement Auto increment
+POP HL
+; Error if ROM
+BIT 7,H ; Check Bit 15
+JR NZ,notWithinROM
+LD IY,errorFailedAccessingROM
+CALL printstr ; print error message
 RET
+notWithinROM:
+LD (HL),A
+INC HL
+JR readNextByte
 
 ExecuteInstruction:
 CALL asciiToWord
@@ -138,9 +147,17 @@ OR L
 LD L,A 
 RET
 
+printWord:
+LD A,H
+CALL printByte
+LD A,L
+CALL printByte
+RET
+
 ; printByte
 ; byte to print in A
 printByte:
+PUSH HL
 LD L,A
 SRL A
 SRL A
@@ -151,6 +168,7 @@ OUT (MEM0),A
 LD A,L
 CALL hexToAscii
 OUT (MEM0),A
+POP HL
 RET
 
 ; converts whatever char is in A into A
@@ -225,5 +243,9 @@ JR clearCmdBufferLoop
 
 unknownCommand:
 DEFM "Unknown",NULL
-failedAccessingROM:
+errorFailedAccessingROM:
 DEFM "Cannot access ROM",NULL
+startupMessage:
+DEFM "Build-"
+DEFDATETIME
+DEFM NEWLINE,NULL
