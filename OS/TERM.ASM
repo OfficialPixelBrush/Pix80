@@ -1,6 +1,6 @@
 MAXCOMMANDLENGTH: EQU 0xFF
-MEM0:     EQU 0b00000000
-KEYBOARD: EQU 0b00010000
+ONBOARD:  EQU 0b00000000
+TERMINAL: EQU 0b00010000
 HEXPRINT: EQU 0b00100000
 CMD: EQU 0xF000
 STR: EQU 0xE000
@@ -8,18 +8,20 @@ NEWLINE: EQU 0x0A
 NULL: EQU 0x00
 ; IX = Command Pointer
 ; IY = String Pointer
-LD IX,CMD      
+LD IX,CMD
+LD IY,startupMessage
+CALL printstr     
 ; KEYBOARD TEST
 IM 0 ; Interrupt Mode 0
 LD A,'>'
-OUT (MEM0),A
+OUT (TERMINAL),A
 
 getNextInput:
 EI ; Renable interrupts
 ; NOTE: HALT disables interrupts after being triggered
 ; So interrupts need to be re-enabled every time
 HALT ; Wait for next keyboard input
-IN  A,(KEYBOARD) ; Read A in
+IN  A,(TERMINAL) ; Read A in
 CP 8  ; Check if backspace
 JR NZ,skipBackspace ; Doesn't visually update yet, but works!
 DEC IX
@@ -28,7 +30,7 @@ JR getNextInput
 skipBackspace:
 CP 13 ; Check if carriage return
 ; If Zero flag is triggered, newline has been entered
-OUT (MEM0),A ; Doesn't affect flags
+OUT (TERMINAL),A ; Doesn't affect flags
 LD (IX),A    ; Doesn't affect flags
 INC IX       ; Doesn't affect flags
 ;LD IY,exampleCommand1
@@ -39,7 +41,7 @@ JR getNextInput  ; Jump back
 instructionAnalysis:
 ; Print Newline
 LD A,NEWLINE
-OUT (MEM0),A
+OUT (TERMINAL),A
 ; Check first Character of command to select mode
 LD IX,CMD
 LD A,(IX)
@@ -54,10 +56,10 @@ CALL Z,ExecuteInstruction
 CALL clearCmdBuffer
 ; Print Newline
 LD A,NEWLINE
-OUT (MEM0),A
+OUT (TERMINAL),A
 ; Print leading char
 LD A,'>'
-OUT (MEM0),A
+OUT (TERMINAL),A
 LD IX,CMD
 RET
 
@@ -76,10 +78,22 @@ ReadInstructionMultiple:
     EX DE, HL ; DE <- HL
     CALL asciiToWord ; load end address into HL
     nextCycleOfRead:
-        LD A, (DE)
+        LD A,E
+        AND 0x0F
+        JR NZ,skipNewLine
+        ; print seperator
+        LD A,NEWLINE
+        OUT (TERMINAL),A
+          EX DE, HL ; DE <- HL
+        CALL printWord
+          EX DE, HL ; DE <- HL
+        LD A,':'
+        OUT (TERMINAL),A
+    skipNewLine:
+        LD A,(DE)
         CALL printByte   ; print the found byte
         LD A, ' '
-        OUT (MEM0), A     ; add a space for readability
+        OUT (TERMINAL), A     ; add a space for readability
         INC DE           ; go to next mem location
         LD A,D
         CP H             ; compare current address with end address
@@ -88,6 +102,10 @@ ReadInstructionMultiple:
         CP L
         JP NZ, nextCycleOfRead
     RET
+; NOTE:
+; while this does mostly work, it doesn't work as intendend
+; mainly, that the very last byte, defined by the second part
+; of the command, is not present, only the ones from DE until HL-1
 
 
 WriteInstruction:
@@ -103,6 +121,13 @@ RET NZ
 PUSH HL
 CALL Z,asciiToByte ; implement Auto increment
 POP HL
+; Error if ROM
+BIT 7,H ; Check Bit 15
+JR NZ,notWithinROM
+LD IY,errorFailedAccessingROM
+CALL printstr ; print error message
+RET
+notWithinROM:
 LD (HL),A
 INC HL
 JR readNextByte
@@ -139,10 +164,12 @@ LD L,A
 RET
 
 printWord:
+PUSH AF
 LD A,H
 CALL printByte
 LD A,L
 CALL printByte
+POP AF
 RET
 
 ; printByte
@@ -155,10 +182,10 @@ SRL A
 SRL A
 SRL A  ; extract upper nibble
 CALL hexToAscii
-OUT (MEM0),A
+OUT (TERMINAL),A
 LD A,L
 CALL hexToAscii
-OUT (MEM0),A
+OUT (TERMINAL),A
 POP HL
 RET
 
@@ -214,7 +241,7 @@ printstr:
 LD A,(IY) ; load value in
 CP NULL
 RET Z
-OUT (MEM0),A
+OUT (TERMINAL),A
 INC IY
 JR printstr
 
@@ -234,5 +261,9 @@ JR clearCmdBufferLoop
 
 unknownCommand:
 DEFM "Unknown",NULL
-failedAccessingROM:
+errorFailedAccessingROM:
 DEFM "Cannot access ROM",NULL
+startupMessage:
+DEFM "Build-"
+DEFDATETIME
+DEFM NEWLINE,NULL
