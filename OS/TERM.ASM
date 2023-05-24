@@ -1,3 +1,5 @@
+; NOTE:
+; Too garbage to work reliably
 MAXCOMMANDLENGTH: EQU 0xFF
 ONBOARD:  EQU 0b00000000
 TERMINAL: EQU 0b00010000
@@ -62,6 +64,10 @@ LD A,'>'
 OUT (TERMINAL),A
 LD IX,CMD
 RET
+
+; TODO: Fix potential issue where, after executing instruction,
+;       registers could be equal to then
+;       wrongly jump into next instruction
 
 ReadInstruction:
     CALL asciiToWord ; load start address into HL

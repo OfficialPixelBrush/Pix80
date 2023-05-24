@@ -74,6 +74,7 @@ ReadInstruction:
     CALL printByte
     RET
 
+; TODO: Maybe ASCII printout too?
 ReadInstructionMultiple:
     EX DE, HL ; DE <- HL
     CALL asciiToWord ; load end address into HL
@@ -90,22 +91,35 @@ ReadInstructionMultiple:
         LD A,':'
         OUT (TERMINAL),A
     skipNewLine:
+        LD A,D
+        CP H
+        JR NZ,notEqualRead
+        LD A,E
+        CP L
+        RET NZ
+        ; exit if E-L
+        ; 10 - 5 doesn't trigger Carry
+        ; 5 - 10 will trigger Carry
+        notEqualRead:
         LD A,(DE)
         CALL printByte   ; print the found byte
         LD A, ' '
         OUT (TERMINAL), A     ; add a space for readability
         INC DE           ; go to next mem location
-        LD A,D
-        CP H             ; compare current address with end address
-        JP NZ, nextCycleOfRead
-        LD A,E
-        CP L
-        JP NZ, nextCycleOfRead
-    RET
+    JR nextCycleOfRead
 ; NOTE:
 ; while this does mostly work, it doesn't work as intendend
 ; mainly, that the very last byte, defined by the second part
 ; of the command, is not present, only the ones from DE until HL-1
+; fixed by using C instead of NZ
+; ACTUALLY FIXED by changing update order
+; instead of printByte then CheckEquality, swap
+; broken again
+
+; TODO: Make a function for comparing two words via DE and HL
+;       Set flags accordingly
+compareWords:
+RET
 
 
 WriteInstruction:
@@ -117,18 +131,44 @@ CALL asciiToWord ; load start address into HL
 ; TODO: Add Waaaa:aaaa,bb to write bytes in a range
 ;       this can be useful for clearing large chunks
 ;       of memory very quickly
+INC IX
+LD A,(IX)
+CP ':'
+JR NZ,readNextCharacterAfterCheck
+EX DE,HL         ; put start address into DE
+CALL asciiToWord ; load end address into HL
+INC IX
+LD A,(IX)
+CP ','
+RET NZ ; just fall out if no byte can be found
+PUSH HL
+CALL asciiToByte ; gets the byte
+LD A,L ; load byte into A
+POP HL
+PUSH AF ; store byte in stack
+nextCycleOfWrite:
+        ; check equality
+        LD A,D
+        CP H
+        JR NZ, notEqualWrite
+        LD A,E
+        CP L
+        JR NZ,exitWrite
+        notEqualWrite:
+        POP AF
+        LD (DE),A        ; write Byte
+        INC DE           ; go to next mem location
+        PUSH AF
+        JR nextCycleOfWrite
+exitWrite:
+POP AF
+RET
+; TODO: Broken again, pls fix
 
-;LD DE, HL ; copy start address to DE
-;INC IX ; go to next char
-;LD A, (IX)
-;CP ':'
-;JR NZ,readNextByte
-;LD IY,unknownCommand
-;CALL printstr
-;RET
 readNextByte:
 INC IX ; go to next char
 LD A,(IX)
+readNextCharacterAfterCheck:
 CP ','
 RET NZ
 PUSH HL
@@ -137,6 +177,10 @@ POP HL
 ; Error if ROM
 BIT 7,H ; Check Bit 15
 JR NZ,notWithinROM
+CALL printWord
+EX DE,HL
+LD A,':'
+OUT (TERMINAL),A
 LD IY,errorFailedAccessingROM
 CALL printstr ; print error message
 RET
