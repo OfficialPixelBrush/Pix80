@@ -112,7 +112,20 @@ WriteInstruction:
 ;read address
 ;read byte
 ;auto increment address for every subsequent byte
-CALL asciiToWord
+CALL asciiToWord ; load start address into HL
+
+; TODO: Add Waaaa:aaaa,bb to write bytes in a range
+;       this can be useful for clearing large chunks
+;       of memory very quickly
+
+;LD DE, HL ; copy start address to DE
+;INC IX ; go to next char
+;LD A, (IX)
+;CP ':'
+;JR NZ,readNextByte
+;LD IY,unknownCommand
+;CALL printstr
+;RET
 readNextByte:
 INC IX ; go to next char
 LD A,(IX)

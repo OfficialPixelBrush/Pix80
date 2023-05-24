@@ -1,5 +1,5 @@
 MAXCOMMANDLENGTH: EQU 0xFF
-MEM0:     EQU 0b00000000
+ONBOARD:  EQU 0b00000000
 TERMINAL: EQU 0b00010000
 HEXPRINT: EQU 0b00100000
 CMD: EQU 0xF000
@@ -78,7 +78,19 @@ ReadInstructionMultiple:
     EX DE, HL ; DE <- HL
     CALL asciiToWord ; load end address into HL
     nextCycleOfRead:
-        LD A, (DE)
+        LD A,E
+        AND 0x0F
+        JR NZ,skipNewLine
+        ; print seperator
+        LD A,NEWLINE
+        OUT (TERMINAL),A
+          EX DE, HL ; DE <- HL
+        CALL printWord
+          EX DE, HL ; DE <- HL
+        LD A,':'
+        OUT (TERMINAL),A
+    skipNewLine:
+        LD A,(DE)
         CALL printByte   ; print the found byte
         LD A, ' '
         OUT (TERMINAL), A     ; add a space for readability
@@ -90,6 +102,10 @@ ReadInstructionMultiple:
         CP L
         JP NZ, nextCycleOfRead
     RET
+; NOTE:
+; while this does mostly work, it doesn't work as intendend
+; mainly, that the very last byte, defined by the second part
+; of the command, is not present, only the ones from DE until HL-1
 
 
 WriteInstruction:
@@ -148,10 +164,12 @@ LD L,A
 RET
 
 printWord:
+PUSH AF
 LD A,H
 CALL printByte
 LD A,L
 CALL printByte
+POP AF
 RET
 
 ; printByte
