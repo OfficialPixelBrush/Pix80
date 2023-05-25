@@ -44,9 +44,9 @@ JP boot
 ; 28h:
 ; 30h:
 ; 38h:
-ORG 0x0008 ; terminal interrupt
-IN A,(TERMINAL)
-RET
+;ORG 0x0008 ; terminal interrupt
+;IN A,(TERMINAL)
+;RET
 
 ; Non-RST Stuff
 boot:
