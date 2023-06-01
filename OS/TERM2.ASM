@@ -10,6 +10,7 @@ SerialOut: EQU 0x10
 SerialIn: EQU 0x08
 
 ; *** Term V0.2 ***
+; USING RASM now!!
 ; RST is used as the equivalent to INT on x86
 ; BC will be used like AX of x86
 ; Used as reference (from TRSDOS):
