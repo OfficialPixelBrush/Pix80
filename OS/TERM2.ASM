@@ -21,6 +21,9 @@ SerialIn: EQU 0x08
 
 ; Z80 Docs:
 ; https://www.zilog.com/docs/z80/um0080.pdf
+;
+; Info on Interrupts
+; http://jgmalcolm.com/z80/intermediate/rstc
 
 ; *** GOALS ***
 ; - Posix-like Syscalls
