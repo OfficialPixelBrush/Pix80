@@ -31,7 +31,7 @@ PUSH AF; Push AF as it's only temp used here
 ; if signed
 NEG
 ; if no signed just continue
-notsighed:
+notsigned:
 ; check the resulting thing
 LD A,B ; Load B into A for Math
 LD B,0 ; Zero B to use as counter 
